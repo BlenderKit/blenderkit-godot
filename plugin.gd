@@ -2,7 +2,7 @@
 extends EditorPlugin
 
 const SERVER = "https://www.blenderkit.com"
-const CLIENT_PORTS = ["65425", "55428", "49452", "35452", "25152", "5152", "1234", "62485"]
+const CLIENT_PORTS = ["62485", "65425", "55428", "49452", "35452", "25152", "5152", "1234"]
 const CLIENT_VERSION = "v1.2.1"
 const LOG_LEVEL = 1 #TODO: configurable
 const WAIT_OK: float = 0.5
@@ -160,6 +160,7 @@ func get_godot_version():
 ### WILL NOT BE USED PROBABLY ###
 
 func get_client_dir():
+	# TODO: create the directory if it does not exist
 	var home_path := ""
 	if OS.has_feature("windows"):
 		home_path = OS.get_environment("USERPROFILE")
@@ -170,29 +171,33 @@ func get_client_dir():
 func get_client_binary():
 	var client_dir = get_client_dir()
 	var arch = Engine.get_architecture_name()
-	var client_bin: String
 	if OS.has_feature("windows"):
-		client_bin = client_dir + "/bin/" + CLIENT_VERSION + "/blenderkit-client-windows-" + arch + ".exe"
-	elif OS.has_feature("macos"):
-		client_bin = client_dir + "/bin/" + CLIENT_VERSION + "/blenderkit-client-macos-" + arch
-	elif OS.has_feature("linux"):
-		client_bin = client_dir + "/bin/" + CLIENT_VERSION + "/blenderkit-client-linux-" + arch
-	return client_bin 
+		return client_dir + "/bin/" + CLIENT_VERSION + "/blenderkit-client-windows-" + arch + ".exe"
+	if OS.has_feature("macos"):
+		return client_dir + "/bin/" + CLIENT_VERSION + "/blenderkit-client-macos-" + arch
+	if OS.has_feature("linux"):
+		return client_dir + "/bin/" + CLIENT_VERSION + "/blenderkit-client-linux-" + arch
+
+func get_client_log_path(port: String):
+	# TODO: create the file if it does not exist
+	var client_dir = get_client_dir()
+	if port == "62485":
+		return client_dir + "/default.log"
+	return client_dir + "/%s.log" % port
 
 func start_client(port: String):
-	var client_dir = get_client_dir()
 	var client_bin = get_client_binary()
-	var log_path = client_dir + "/default.log"
-
-	var pid_str = str(OS.get_process_id())
+	var log_path = get_client_log_path(port)
+	var godot_PID = str(OS.get_process_id())
 	var client_PID: int = 0
 
+	print("Starting Client (log: %s)" % log_path)
 	# Godot's OS.create_process(), OS.execute() and simillar does not support redirecting pipe to file, so we do it via shells
 	if OS.has_feature("windows"):
-		var command_str = '"%s" -port %s -server %s -software Godot -pid %s > "%s" 2>&1' % [client_bin, port, SERVER, pid_str, log_path]
+		var command_str = '"%s" -port %s -server %s -software Godot -pid %s > "%s" 2>&1' % [client_bin, port, SERVER, godot_PID, log_path]
 		client_PID = OS.create_process("cmd.exe", ["/C", "start", "/B", "", command_str])
 	elif OS.has_feature("macos") or OS.has_feature("linux"):
-		var shell_command = '%s -port %s -server %s -software Godot -pid %s > "%s" 2>&1 &' % [client_bin, port, SERVER, pid_str, log_path]
+		var shell_command = '%s -port %s -server %s -software Godot -pid %s > "%s" 2>&1 &' % [client_bin, port, SERVER, godot_PID, log_path]
 		client_PID = OS.create_process("/bin/sh", ["-c", shell_command])
 	else:
 		print("Could not start client: Unsupported OS. Only Windows, MacOS and Linux are supported.")
