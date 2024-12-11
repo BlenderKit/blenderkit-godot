@@ -1,15 +1,15 @@
 @tool
 extends EditorPlugin
 
+const SERVER = "https://www.blenderkit.com"
 const CLIENT_PORTS = ["65425", "55428", "49452", "35452", "25152", "5152", "1234", "62485"]
-const CLIENT_VERSION = "v1.1.2"
+const CLIENT_VERSION = "v1.2.1"
 const LOG_LEVEL = 1 #TODO: configurable
 const WAIT_OK: float = 0.5
 const WAIT_EXPLORING: float = 0.1
 const WAIT_FAILING: float = 1
 
-var port = "62485" # TODO: configurable
-var server = "https://www.blenderkit.com"
+var status = "exploring" # exploring (check if Client runs)/starting ()/failing/running
 
 var download_dir: String = "res://bk_assets/"
 var absolute_download_path: String
@@ -43,6 +43,7 @@ func _enter_tree():
 	EnabledCheckButton = dockedMenuScene.get_node("StatusRow/Enabled/CheckButton")
 	EnabledCheckButton.connect("toggled", Callable(self, "EnabledCheckButtonChanged"))
 	StatusLabel = dockedMenuScene.get_node("StatusRow/Status/Label")
+	PortOptionButton = dockedMenuScene.get_node("Port/OptionButton")
 	
 	if EnabledCheckButton.is_pressed():
 		start_timer()
@@ -113,18 +114,31 @@ func on_request_completed(result, response_code, headers, body):
 		print("BlenderKit: %s" % msg)
 		return
 	
-	StatusLabel.text = "Connecting..."
 	print("Request to Client on port %s failed with response code: %d" % [CLIENT_PORTS[ports_index], response_code])
-	ports_index += 1
-	if ports_index >= len(CLIENT_PORTS):
-		ports_index = 0
-		
-	failed_requests += 1
-	if failed_requests < len(CLIENT_PORTS):
-		timer.wait_time = WAIT_EXPLORING
-	else:
-		timer.wait_time = WAIT_FAILING
 
+	# DECIDE STATUS
+	failed_requests += 1
+	# EXPLORING - plugin just started and we check all possible ports if Client is not already running
+	if failed_requests < len(CLIENT_PORTS):
+		status = "exploring"
+		timer.wait_time = WAIT_EXPLORING
+		ports_index += 1
+		if ports_index >= len(CLIENT_PORTS):
+			ports_index = 0
+	# STARTING - client not present, we try to start new Client
+	else:
+		status = "starting"
+		timer.wait_time = WAIT_FAILING
+		if failed_requests % len(CLIENT_PORTS) == 0:
+			var selected_index = PortOptionButton.get_selected()
+			var port = PortOptionButton.get_item_text(selected_index)
+			ports_index = CLIENT_PORTS.find(port)
+			start_client(port)
+
+	StatusLabel.text = "%s (%s)..." % [status, failed_requests]
+	
+
+		
 	var text = body.get_string_from_utf8()
 	if text != "":
 		print("--> response: %s" % text)
@@ -165,13 +179,23 @@ func get_client_binary():
 		client_bin = client_dir + "/bin/" + CLIENT_VERSION + "/blenderkit-client-linux-" + arch
 	return client_bin 
 
-func start_client():
+func start_client(port: String):
 	var client_dir = get_client_dir()
 	var client_bin = get_client_binary()
 	var log = client_dir + "/default.log"
 
 	var output = []
 	var command: String
-	var args: Array
-	
-	OS.create_process(client_bin, args)
+	var args = [
+		"-port", port,
+		"-server", SERVER,
+		"-software", "Godot",
+		"-pid", str(OS.get_process_id()),
+		]
+  
+	print("Starting Client on port %s" % port)
+	var client_PID = OS.create_process(client_bin, args)
+	if client_PID == 0:
+		print("Failed to start the client.")
+	else:
+		print("Client started (port:%s, PID=%s)" % [port, client_PID])
