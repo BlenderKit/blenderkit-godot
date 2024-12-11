@@ -91,7 +91,7 @@ func on_timer_timeout():
 		"version": get_godot_version(),
 		"addonVersion": get_addon_version(),
 		"assetsPath": absolute_download_path,
-		}
+		"projectName": ProjectSettings.get_setting("application/config/name"),
 	var json = JSON.stringify(data)
 	http_request.cancel_request()
 	http_request.request(url, headers, HTTPClient.METHOD_POST, json)
