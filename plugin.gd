@@ -92,6 +92,7 @@ func on_timer_timeout():
 		"addonVersion": get_addon_version(),
 		"assetsPath": absolute_download_path,
 		"projectName": ProjectSettings.get_setting("application/config/name"),
+	}
 	var json = JSON.stringify(data)
 	http_request.cancel_request()
 	http_request.request(url, headers, HTTPClient.METHOD_POST, json)
@@ -99,7 +100,7 @@ func on_timer_timeout():
 
 func on_request_completed(result, response_code, headers, body):
 	if response_code == 200:
-		StatusLabel.text = "Connected"
+		StatusLabel.text = "Connected (%s)" % CLIENT_PORTS[ports_index]
 		var text = body.get_string_from_utf8()
 		var data = JSON.parse_string(text)
 		var msg = data["message"]
@@ -107,7 +108,7 @@ func on_request_completed(result, response_code, headers, body):
 		var client_version = data["client_version"]
 		failed_requests = 0
 		timer.wait_time = WAIT_OK
-		if !msg || level < LOG_LEVEL:
+		if !msg or level < LOG_LEVEL:
 			return
 		print("BlenderKit: %s" % msg)
 		return
