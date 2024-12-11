@@ -182,19 +182,22 @@ func get_client_binary():
 func start_client(port: String):
 	var client_dir = get_client_dir()
 	var client_bin = get_client_binary()
-	var log = client_dir + "/default.log"
+	var log_path = client_dir + "/default.log"
 
-	var output = []
-	var command: String
-	var args = [
-		"-port", port,
-		"-server", SERVER,
-		"-software", "Godot",
-		"-pid", str(OS.get_process_id()),
-		]
-  
-	print("Starting Client on port %s" % port)
-	var client_PID = OS.create_process(client_bin, args)
+	var pid_str = str(OS.get_process_id())
+	var client_PID: int = 0
+
+	# Godot's OS.create_process(), OS.execute() and simillar does not support redirecting pipe to file, so we do it via shells
+	if OS.has_feature("windows"):
+		var command_str = '"%s" -port %s -server %s -software Godot -pid %s > "%s" 2>&1' % [client_bin, port, SERVER, pid_str, log_path]
+		client_PID = OS.create_process("cmd.exe", ["/C", "start", "/B", "", command_str])
+	elif OS.has_feature("macos") or OS.has_feature("linux"):
+		var shell_command = '%s -port %s -server %s -software Godot -pid %s > "%s" 2>&1 &' % [client_bin, port, SERVER, pid_str, log_path]
+		client_PID = OS.create_process("/bin/sh", ["-c", shell_command])
+	else:
+		print("Could not start client: Unsupported OS. Only Windows, MacOS and Linux are supported.")
+		return
+
 	if client_PID == 0:
 		print("Failed to start the client.")
 	else:
