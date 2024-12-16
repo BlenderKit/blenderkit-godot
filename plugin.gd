@@ -136,9 +136,7 @@ func on_request_completed(result, response_code, headers, body):
 			start_client(port)
 
 	StatusLabel.text = "%s (%s)..." % [status, failed_requests]
-	
 
-		
 	var text = body.get_string_from_utf8()
 	if text != "":
 		print("--> response: %s" % text)
@@ -155,12 +153,13 @@ func get_godot_version():
 	return str(Engine.get_version_info()["major"]) + "." + str(Engine.get_version_info()["minor"]) + "." + str(Engine.get_version_info()["patch"])
 
 
+func ensure_dir_structure():
+	var client_dir = get_client_dir()
+	DirAccess.make_dir_recursive_absolute(client_dir)
+	return
 
-
-### WILL NOT BE USED PROBABLY ###
 
 func get_client_dir():
-	# TODO: create the directory if it does not exist
 	var home_path := ""
 	if OS.has_feature("windows"):
 		home_path = OS.get_environment("USERPROFILE")
@@ -168,15 +167,23 @@ func get_client_dir():
 		home_path = OS.get_environment("HOME")
 	return home_path + "/blenderkit_data/client"
 
-func get_client_binary():
-	var client_dir = get_client_dir()
+
+func get_client_binary_name():
 	var arch = Engine.get_architecture_name()
 	if OS.has_feature("windows"):
-		return client_dir + "/bin/" + CLIENT_VERSION + "/blenderkit-client-windows-" + arch + ".exe"
+		return "blenderkit-client-windows-" + arch + ".exe"
 	if OS.has_feature("macos"):
-		return client_dir + "/bin/" + CLIENT_VERSION + "/blenderkit-client-macos-" + arch
+		return "blenderkit-client-macos-" + arch
 	if OS.has_feature("linux"):
-		return client_dir + "/bin/" + CLIENT_VERSION + "/blenderkit-client-linux-" + arch
+		return "blenderkit-client-linux-" + arch
+
+
+func get_packed_client_binary_path():
+	var plugin_dir = self.get_script().resource_path.get_base_dir()
+	var client_bin_name = get_client_binary_name()
+	var bin_path = plugin_dir + "/client/" + CLIENT_VERSION + "/" + client_bin_name
+	return ProjectSettings.globalize_path(bin_path)
+
 
 func get_client_log_path(port: String):
 	# TODO: create the file if it does not exist
@@ -185,8 +192,10 @@ func get_client_log_path(port: String):
 		return client_dir + "/default.log"
 	return client_dir + "/%s.log" % port
 
+
 func start_client(port: String):
-	var client_bin = get_client_binary()
+	ensure_dir_structure() # so log's directory exists
+	var client_bin = get_packed_client_binary_path() # we execute directly from the plugin directory
 	var log_path = get_client_log_path(port)
 	var godot_PID = str(OS.get_process_id())
 	var client_PID: int = 0
