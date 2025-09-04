@@ -4,8 +4,6 @@
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
 
 [node name="StatusRow" type="HSplitContainer" parent="."]
 layout_mode = 2
@@ -33,17 +31,6 @@ text = "Client:"
 layout_mode = 2
 text = "---"
 
-[node name="RichTextLabel" type="RichTextLabel" parent="."]
-layout_mode = 2
-text = "BlenderKit add-on for Godot.
-1. Make sure BlenderKit-Client is running.
-2. Wait until Client connection is confirmed in Status.
-3. Choose assets on www.blenderkit.com
-4. Click on Get Asset, choose Godot
-5. Asset is downloaded into res://blenderkit_assets
-"
-fit_content = true
-
 [node name="Port" type="HSplitContainer" parent="."]
 layout_mode = 2
 
@@ -53,8 +40,8 @@ text = "Client port:"
 
 [node name="OptionButton" type="OptionButton" parent="Port"]
 layout_mode = 2
-item_count = 8
 selected = 0
+item_count = 8
 popup/item_0/text = "62485"
 popup/item_0/id = 0
 popup/item_1/text = "65425"
@@ -71,3 +58,39 @@ popup/item_6/text = "5152"
 popup/item_6/id = 6
 popup/item_7/text = "1234"
 popup/item_7/id = 7
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+layout_mode = 2
+text = "BlenderKit add-on for Godot.
+1. Make sure BlenderKit-Client is running.
+2. Wait until Client connection is confirmed in Status.
+3. Choose assets on www.blenderkit.com
+4. Click on Get Asset, choose Godot
+5. Asset is downloaded into res://blenderkit_assets
+"
+fit_content = true
+
+[node name="DocsContainer" type="HSplitContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 10
+
+[node name="HSplitContainer" type="HSplitContainer" parent="DocsContainer"]
+layout_mode = 2
+
+[node name="Version" type="Label" parent="DocsContainer/HSplitContainer"]
+layout_mode = 2
+text = "BlenderKit plugin"
+
+[node name="Links" type="HSplitContainer" parent="DocsContainer"]
+layout_mode = 2
+size_flags_horizontal = 10
+
+[node name="OpenDocs" type="LinkButton" parent="DocsContainer/Links"]
+layout_mode = 2
+text = "Documentation"
+uri = "https://github.com/BlenderKit/blenderkit-godot"
+
+[node name="OpenIssues" type="LinkButton" parent="DocsContainer/Links"]
+layout_mode = 2
+text = "Report a Bug"
+uri = "https://github.com/BlenderKit/blenderkit-godot/issues"
