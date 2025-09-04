@@ -10,6 +10,7 @@ layout_mode = 2
 
 [node name="Enabled" type="HSplitContainer" parent="StatusRow"]
 layout_mode = 2
+tooltip_text = "Enable plugin to start Client and connect to it. The Client is responsible for communication between Godot and Asset Gallery in the browser."
 
 [node name="Label" type="Label" parent="StatusRow/Enabled"]
 layout_mode = 2
@@ -22,6 +23,7 @@ button_pressed = true
 [node name="Status" type="HSplitContainer" parent="StatusRow"]
 layout_mode = 2
 size_flags_horizontal = 10
+tooltip_text = "Status of the plugin's connection to locally running Client. Successful connection allows direct and automated downloads from the browser."
 
 [node name="LabelDescription" type="Label" parent="StatusRow/Status"]
 layout_mode = 2
@@ -31,8 +33,38 @@ text = "Client:"
 layout_mode = 2
 text = "---"
 
+[node name="Spacer2" type="VBoxContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.16
+
+[node name="BrowseAssets" type="Button" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.31
+tooltip_text = "Open BlenderKit asset gallery in your browser. Choose the assets you like and download them directly and automatically into this Godot project."
+text = "Browse Assets"
+
+[node name="Spacer" type="VBoxContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.16
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+visible = false
+layout_mode = 2
+text = "BlenderKit add-on for Godot.
+1. Make sure BlenderKit-Client is running.
+2. Wait until Client connection is confirmed in Status.
+3. Choose assets on www.blenderkit.com
+4. Click on Get Asset, choose Godot
+5. Asset is downloaded into res://blenderkit_assets
+"
+fit_content = true
+
 [node name="Port" type="HSplitContainer" parent="."]
 layout_mode = 2
+tooltip_text = "Port on which the plugin will start Client and expect it to run."
 
 [node name="Label" type="Label" parent="Port"]
 layout_mode = 2
@@ -59,16 +91,17 @@ popup/item_6/id = 6
 popup/item_7/text = "1234"
 popup/item_7/id = 7
 
-[node name="RichTextLabel" type="RichTextLabel" parent="."]
+[node name="DownloadTo" type="HSplitContainer" parent="."]
 layout_mode = 2
-text = "BlenderKit add-on for Godot.
-1. Make sure BlenderKit-Client is running.
-2. Wait until Client connection is confirmed in Status.
-3. Choose assets on www.blenderkit.com
-4. Click on Get Asset, choose Godot
-5. Asset is downloaded into res://blenderkit_assets
-"
-fit_content = true
+tooltip_text = "Directory into which the plugin will download the assets."
+
+[node name="Label" type="Label" parent="DownloadTo"]
+layout_mode = 2
+text = "Download to:"
+
+[node name="LineEdit" type="LineEdit" parent="DownloadTo"]
+layout_mode = 2
+text = "res://bk_assets"
 
 [node name="DocsContainer" type="HSplitContainer" parent="."]
 layout_mode = 2

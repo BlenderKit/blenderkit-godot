@@ -25,6 +25,7 @@ var EnabledCheckButton
 var StatusLabel
 var PortOptionButton
 var VersionLabel
+var BrowseAssetsButton
 
 
 func _enter_tree():
@@ -47,6 +48,8 @@ func _enter_tree():
 	PortOptionButton = dockedMenuScene.get_node("Port/OptionButton")
 	VersionLabel = dockedMenuScene.get_node("DocsContainer/HSplitContainer/Version")
 	VersionLabel.text = "BlenderKit v%s" % get_addon_version()
+	BrowseAssetsButton = dockedMenuScene.get_node("BrowseAssets")
+	BrowseAssetsButton.pressed.connect(browse_asset_gallery_pressed)
 	
 	if EnabledCheckButton.is_pressed():
 		start_timer()
@@ -219,3 +222,7 @@ func start_client(port: String):
 		print("Failed to start the client.")
 	else:
 		print("Client started (port:%s, PID=%s)" % [port, client_PID])
+
+
+func browse_asset_gallery_pressed():
+	OS.shell_open(SERVER)
