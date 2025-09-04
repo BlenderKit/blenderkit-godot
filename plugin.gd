@@ -3,7 +3,7 @@ extends EditorPlugin
 
 const SERVER = "https://www.blenderkit.com"
 const CLIENT_PORTS = ["62485", "65425", "55428", "49452", "35452", "25152", "5152", "1234"]
-const CLIENT_VERSION = "v1.2.1"
+const CLIENT_VERSION = "v1.5.0"
 const LOG_LEVEL = 1 #TODO: configurable
 const WAIT_OK: float = 0.5
 const WAIT_EXPLORING: float = 0.1
@@ -24,6 +24,7 @@ var dockedMenuScene
 var EnabledCheckButton
 var StatusLabel
 var PortOptionButton
+var VersionLabel
 
 
 func _enter_tree():
@@ -44,6 +45,8 @@ func _enter_tree():
 	EnabledCheckButton.connect("toggled", Callable(self, "EnabledCheckButtonChanged"))
 	StatusLabel = dockedMenuScene.get_node("StatusRow/Status/Label")
 	PortOptionButton = dockedMenuScene.get_node("Port/OptionButton")
+	VersionLabel = dockedMenuScene.get_node("DocsContainer/HSplitContainer/Version")
+	VersionLabel.text = "BlenderKit v%s" % get_addon_version()
 	
 	if EnabledCheckButton.is_pressed():
 		start_timer()
@@ -200,7 +203,7 @@ func start_client(port: String):
 	var godot_PID = str(OS.get_process_id())
 	var client_PID: int = 0
 
-	print("Starting Client (log: %s)" % log_path)
+	print("Starting Client %s (log: %s)" % [CLIENT_VERSION, log_path])
 	# Godot's OS.create_process(), OS.execute() and simillar does not support redirecting pipe to file, so we do it via shells
 	if OS.has_feature("windows"):
 		var command_str = '"%s" -port %s -server %s -software Godot -pid %s > "%s" 2>&1' % [client_bin, port, SERVER, godot_PID, log_path]
