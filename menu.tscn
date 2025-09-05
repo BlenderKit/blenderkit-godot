@@ -4,6 +4,8 @@
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="StatusRow" type="HSplitContainer" parent="."]
 layout_mode = 2
@@ -33,10 +35,10 @@ text = "Client:"
 layout_mode = 2
 text = "---"
 
-[node name="Spacer2" type="VBoxContainer" parent="."]
+[node name="Spacer" type="VBoxContainer" parent="."]
 layout_mode = 2
 size_flags_vertical = 3
-size_flags_stretch_ratio = 0.16
+size_flags_stretch_ratio = 0.02
 
 [node name="BrowseAssets" type="Button" parent="."]
 layout_mode = 2
@@ -45,10 +47,10 @@ size_flags_stretch_ratio = 0.31
 tooltip_text = "Open BlenderKit asset gallery in your browser. Choose the assets you like and download them directly and automatically into this Godot project."
 text = "Browse Assets"
 
-[node name="Spacer" type="VBoxContainer" parent="."]
+[node name="Spacer2" type="VBoxContainer" parent="."]
 layout_mode = 2
 size_flags_vertical = 3
-size_flags_stretch_ratio = 0.16
+size_flags_stretch_ratio = 0.05
 
 [node name="RichTextLabel" type="RichTextLabel" parent="."]
 visible = false
