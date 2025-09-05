@@ -26,6 +26,7 @@ var StatusLabel
 var PortOptionButton
 var VersionLabel
 var BrowseAssetsButton
+var DownloadDirectory
 
 
 func _enter_tree():
@@ -50,6 +51,9 @@ func _enter_tree():
 	VersionLabel.text = "BlenderKit v%s" % get_addon_version()
 	BrowseAssetsButton = dockedMenuScene.get_node("BrowseAssets")
 	BrowseAssetsButton.pressed.connect(browse_asset_gallery_pressed)
+	DownloadDirectory = dockedMenuScene.get_node("DownloadTo/LineEdit")
+	DownloadDirectory.text_submitted.connect(func(text): download_dir_submitted())
+	DownloadDirectory.focus_exited.connect(download_dir_submitted)
 	
 	if EnabledCheckButton.is_pressed():
 		start_timer()
@@ -226,3 +230,9 @@ func start_client(port: String):
 
 func browse_asset_gallery_pressed():
 	OS.shell_open(SERVER)
+
+
+func download_dir_submitted():
+	download_dir = DownloadDirectory.text
+	absolute_download_path = ProjectSettings.globalize_path(download_dir)
+	print("absolute_download_path is %s" % absolute_download_path)
