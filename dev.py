@@ -1,29 +1,54 @@
-# Copyright (C) 2024 BlenderKit
-#
-# ##### BEGIN GPL LICENSE BLOCK #####
-#
-#  This program is free software; you can redistribute it and/or
-#  modify it under the terms of the GNU General Public License
-#  as published by the Free Software Foundation; either version 2
-#  of the License, or (at your option) any later version.
-#
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
-#
-#  You should have received a copy of the GNU General Public License
-#  along with this program; if not, write to the Free Software Foundation,
-#  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-#
-# ##### END GPL LICENSE BLOCK #####
-
+#!/usr/bin/env python3
 import argparse
+import configparser
 import os
 import shutil
+import subprocess
+import sys
 
 
-def copy_client_binaries(binaries_path: str, addon_build_dir: str):
+PLUGIN_SRC_DIR = "addons"
+PLUGIN_DIR = "blenderkit"
+CLIENT_DIR = "BlenderKit"
+RESULT_DIR = "out"
+ARCHIVE_BASE_NAME = "blenderkit-godot"
+
+
+def build_all(client_dir=CLIENT_DIR, result_dir=RESULT_DIR):
+    """Build BlenderKit Client and Plugin."""
+    build_client(client_dir=client_dir)
+    build_plugin(client_dir=client_dir, result_dir=result_dir)
+
+
+def get_client_src():
+    print("# Getting BlenderKit Client sources")
+    if os.path.exists(CLIENT_DIR):
+        print(f"Client Repo exists at {CLIENT_DIR}, updating...")
+        subprocess.run(
+            ["git", "-C", CLIENT_DIR, "pull"],
+            check=True,
+        )
+    else:
+        print(f"Cloning Client Repo to {CLIENT_DIR}...")
+        subprocess.run(
+            ["git", "clone", "https://github.com/BlenderKit/BlenderKit.git"],
+            check=True,
+        )
+
+
+def build_client(client_dir=CLIENT_DIR):
+    if client_dir == CLIENT_DIR:
+        get_client_src()
+    print("# Building BlenderKit Client with GO")
+    subprocess.run(
+        ["python3", "dev.py", "build"],
+        cwd=client_dir,
+        check=True,
+    )
+
+
+def copy_client_binaries(binaries_path: str, result_dir=RESULT_DIR):
+    print(f"Copying Client binaries: {binaries_path} -> {result_dir}")
     if not os.path.exists(binaries_path):
         print(f"Client binaries path {binaries_path} does not exist, exiting.")
         exit(1)
@@ -32,100 +57,185 @@ def copy_client_binaries(binaries_path: str, addon_build_dir: str):
         exit(1)
 
     client_version = os.path.basename(os.path.normpath(binaries_path))
-    target_dir = os.path.join(addon_build_dir, "client", client_version)
-    os.makedirs(target_dir)
+    target_dir = os.path.join(result_dir, "client", client_version)
+    os.makedirs(target_dir, exist_ok=True)
 
     files = os.listdir(binaries_path)
+    if not files:
+        print(f"No Client binaries found in {binaries_path}, exiting.")
+        exit(1)
+
     client_files = [f for f in files if f.startswith("blenderkit-client")]
     for file_name in client_files:
         source_file = os.path.join(binaries_path, file_name)
         target_file = os.path.join(target_dir, file_name)
         shutil.copy2(source_file, target_file)
-        print(f"Copied {source_file} to {target_file}")
+        print(f"Copied: {target_file}")
 
-    print(f"BlenderKit-Client {client_version} binaries copied from {binaries_path} to {target_dir}")
-
-
-def do_build(client_binaries_path: str, install_at: str="", clean_dir: str=""):
-    """Build the plugin by copying relevant files to ./out/blenderkit directory. Create zip in ./out/blenderkit-godot.zip.
-    - client_binaries_path: select directory (e.g. v1.2.1) containing Client (signed) binaries for all platforms
-    - install_at: also copy the build to install location if specified, e.g. godot-project/addons/blenderkit directory.
-    - include_tests: include test files into .zip file, so tests can be run with this .zip
-    - clean_dir: if specified, clean that directory before building the add-on, e.g. clean client bin in blenderkit_data: "/Users/username/blenderkit_data/client/bin"
-    """
-
-    out_dir = os.path.abspath("out")
-    addon_build_dir = os.path.join(out_dir, "blenderkit")
-    shutil.rmtree(out_dir, True)
-
-    copy_client_binaries(client_binaries_path, addon_build_dir)
-
-    ignore_files = [
-        ".gitignore",
-        "dev.py",
-        "README.md",
-        ".DS_Store",
-        ".mypy_cache"
-    ]
-
-    for item in os.listdir():
-        if os.path.isdir(item):
-            continue  # if needed, use shutil.copytree() before this loop
-        if item in ignore_files:
-            continue
-        shutil.copy(item, f"{addon_build_dir}/{item}")
-
-    # CREATE ZIP
-    print("Creating ZIP archive.")
-    shutil.make_archive("out/blenderkit", "zip", "out", "blenderkit")
-
-    if install_at is not None:
-        print(f"Copying to {install_at}/blenderkit")
-        shutil.rmtree(f"{install_at}/blenderkit", ignore_errors=True)
-        shutil.copytree("out/blenderkit", f"{install_at}/blenderkit")
-    if clean_dir is not None:
-        print(f"Cleaning directory {clean_dir}")
-        shutil.rmtree(clean_dir, ignore_errors=True)
-
-    print("BlenderKit Godot plugin build DONE!")
-
-
-### COMMAND LINE INTERFACE
-
-parser = argparse.ArgumentParser()
-parser.add_argument(
-    "command",
-    default="build",
-    choices=["build"],
-    help="""
-  BUILD = copy relevant files into ./out/blenderkit.
-  """,
-)
-parser.add_argument(
-    "--install-at",
-    type=str,
-    default=None,
-    help="If path is specified, then builded addon will be also copied to that location.",
-)
-parser.add_argument(
-    "--clean-dir",
-    type=str,
-    default=None,
-    help="Specify path to global_dir/client/bin or other dir which should be cleaned.",
-)
-parser.add_argument(
-    "--client-build",
-    type=str,
-    default=None,
-    help="Specify path client_builds/vX.Y.Z. Binaries in this directory will be used instead of building new ones.",
-)
-args = parser.parse_args()
-
-if args.command == "build":
-    do_build(
-        client_binaries_path=args.client_build,
-        install_at=args.install_at,
-        clean_dir=args.clean_dir,
+    print(
+        f"{len(files)} BlenderKit-Client {client_version} binaries copied: {binaries_path} -> {target_dir}"
     )
-else:
-    parser.print_help()
+
+
+def build_plugin(client_dir=CLIENT_DIR, result_dir=RESULT_DIR):
+    print("# Building BlenderKit Plugin")
+
+    plugin_out_dir = os.path.join(result_dir, PLUGIN_SRC_DIR)
+    plugin_version = get_plugin_version()
+    plugin_client_dir = os.path.join(plugin_out_dir, PLUGIN_DIR)
+    client_bin_dir = find_client_bin_dir(client_dir)
+    client_version = os.path.basename(os.path.normpath(client_bin_dir))
+    archive_base_name = get_archive_base_name(plugin_version)
+    archive_base_path = os.path.join(result_dir, archive_base_name)
+    archive_path = archive_base_path + ".zip"
+
+    print(f"Plugin dir: {PLUGIN_SRC_DIR}")
+    print(f"Plugin version: {plugin_version}")
+    print(f"Client dir: {client_dir}")
+    print(f"Client binaries dir: {client_bin_dir}")
+    print(f"Client version: {client_version[1:]}")
+    print(f"Result dir: {result_dir}")
+    print()
+
+    os.makedirs(result_dir, exist_ok=True)
+    shutil.rmtree(plugin_out_dir, ignore_errors=True)
+
+    print(f"Copying Plugin sources: {PLUGIN_SRC_DIR} -> {plugin_out_dir}")
+    shutil.copytree(PLUGIN_SRC_DIR, plugin_out_dir)
+
+    copy_client_binaries(client_bin_dir, plugin_client_dir)
+
+    print(f"Creating ZIP archive: {archive_path}")
+    real_archive_path = shutil.make_archive(
+        archive_base_path, "zip", result_dir, PLUGIN_SRC_DIR
+    )
+    if os.path.abspath(archive_path) != os.path.abspath(real_archive_path):
+        raise RuntimeError(
+            f"Archive path mismatch: expected {archive_path}, got {real_archive_path}"
+        )
+
+    print(f"✓ BlenderKit Godot plugin build DONE \\o/")
+    print(f"Plugin files:  {plugin_out_dir}")
+    print(f"ZIP archive:   {archive_path}")
+
+
+def find_client_bin_dir(client_dir=CLIENT_DIR):
+    base_dir = os.path.join(client_dir, "out", "blenderkit", "client")
+    dirs = [
+        d
+        for d in os.listdir(base_dir)
+        if d.startswith("v") and os.path.isdir(os.path.join(base_dir, d))
+    ]
+    if not dirs:
+        raise FileNotFoundError(f"No client binaries found in {base_dir}")
+    # sort desc in unlikely case there are multiple versions
+    dirs.sort(reverse=True)
+    return os.path.join(base_dir, dirs[0])
+
+
+def get_archive_base_name(version: str) -> str:
+    return f"{ARCHIVE_BASE_NAME}_v{version}"
+
+
+def get_plugin_version() -> str:
+    config_path = os.path.join(PLUGIN_SRC_DIR, "blenderkit", "plugin.cfg")
+    config = configparser.ConfigParser()
+    config.read(config_path)
+    return config.get("plugin", "version").strip('"')
+
+
+### Command-Line Interface
+
+
+# Show default argument values
+class NiceHelpFormatter(
+    argparse.RawTextHelpFormatter, argparse.ArgumentDefaultsHelpFormatter
+):
+    pass
+
+
+parser = argparse.ArgumentParser(
+    formatter_class=NiceHelpFormatter,
+)
+subparsers = parser.add_subparsers(
+    title="commands",
+    dest="command",
+    help="Available commands",
+)
+
+# COMMAND: build
+parser_build = subparsers.add_parser(
+    "build",
+    help="Build BlenderKit Godot Plugin including Client build.",
+    description="Build BlenderKit Godot Plugin including Client build.",
+    formatter_class=NiceHelpFormatter,
+)
+parser_build.set_defaults(func=build_all)
+
+# COMMAND: get-client-src
+parser_build = subparsers.add_parser(
+    "get-client-src",
+    help="Get BlenderKit Client sources.",
+    description="Get BlenderKit Client sources.",
+    formatter_class=NiceHelpFormatter,
+)
+parser_build.set_defaults(func=get_client_src)
+
+# COMMAND: build-client
+parser_build_client = subparsers.add_parser(
+    "build-client",
+    help="Build BlenderKit Client with GO.",
+    description="Build BlenderKit Client with GO in-place.",
+    formatter_class=NiceHelpFormatter,
+)
+parser_build_client.set_defaults(func=build_client)
+parser_build_client.add_argument(
+    "-c",
+    "--client-dir",
+    type=str,
+    default=CLIENT_DIR,
+    help="Path to BlenderKit Client sources.",
+)
+
+# COMMAND: build-plugin
+parser_build_plugin = subparsers.add_parser(
+    "build-plugin",
+    help="Build BlenderKit Godot Plugin with existing Client.",
+    description="Build BlenderKit Godot Plugin with existing Client.",
+    formatter_class=NiceHelpFormatter,
+)
+parser_build_plugin.set_defaults(func=build_plugin)
+parser_build_plugin.add_argument(
+    "-c",
+    "--client-dir",
+    type=str,
+    default=CLIENT_DIR,
+    help="Path to BlenderKit Client sources.",
+)
+parser_build_plugin.add_argument(
+    "-o",
+    "--result-dir",
+    type=str,
+    default=RESULT_DIR,
+    help="Path to BlenderKit Client sources.",
+)
+
+
+def main():
+    args = parser.parse_args()
+
+    if args.command is None:
+        # Print help when no command is given for convenience
+        parser.print_help()
+        sys.exit(1)
+
+    # Process args to pass to command function
+    kwargs = dict(vars(args))
+    kwargs.pop("command")
+    kwargs.pop("func")
+    # Invoke function associated with the chosen command
+    args.func(**kwargs)
+
+
+if __name__ == "__main__":
+    main()

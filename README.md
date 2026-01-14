@@ -4,10 +4,45 @@ Simple yet effective add-on which enables direct import of models from BlenderKi
 Add the add-on and then just select the models you need in the BlenderKit.com online gallery and send them directly into your Godot project.
 
 
-## Developing
+## Directory Structure
 
-1. Clone this repository somewhere outside Godot project.
-2. Make the changes needed.
-3. Build the plugin with command: `python dev.py --client-build <path-to-client-build-directory> --install-at <path-to-godot-project-for-testing>`, e.g.: `python dev.py --client-build /Users/ag/devel/blenderkit/blenderkit/out/blenderkit/client/v1.2.1 --install-at /Users/ag/devel/blenderkit/BKit-Godot/addons`
-4. Start Godot/Reload the plugin in running Godot instance
-5. .zip file for distribution is located in `./out/blenderkit.zip`
+- `addons/blenderkit/` - Godot plugin sources (standard Godot addon path)
+- `BlenderKit/` - BlenderKit client sources (cloned from upstream repo)
+- `out/` - Build output directory (generated)
+
+
+## Building
+
+Full build (fetches client sources, builds client, packages plugin):
+
+```sh
+./dev.py build
+```
+
+The distributable ZIP will be at `out/blenderkit-godot_vX.Y.Z.zip`.
+
+
+## Development
+
+1. Clone this repository
+2. Get the BlenderKit client sources:
+   ```sh
+   ./dev.py get-client-src
+   ```
+3. Make changes to plugin in `addons/blenderkit/`
+4. Build and test:
+   ```sh
+   ./dev.py build
+   ```
+5. Copy `out/addons/blenderkit/` to your Godot project's `addons/` directory
+
+### Available Commands
+
+| Command | Description |
+|---------|-------------|
+| `build` | Full build: client + plugin |
+| `get-client-src` | Clone/update BlenderKit client repository |
+| `build-client` | Build only the Go client |
+| `build-plugin` | Package plugin with existing client binaries |
+
+Run `./dev.py <command> --help` for command-specific options.
