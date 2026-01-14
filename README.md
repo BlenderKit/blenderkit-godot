@@ -44,5 +44,21 @@ The distributable ZIP will be at `out/blenderkit-godot_vX.Y.Z.zip`.
 | `get-client-src` | Clone/update BlenderKit client repository |
 | `build-client` | Build only the Go client |
 | `build-plugin` | Package plugin with existing client binaries |
+| `set-version` | Set plugin version in `plugin.cfg` |
 
 Run `./dev.py <command> --help` for command-specific options.
+
+
+## Releasing
+
+Releases are automated via GitHub Actions. To create a new release:
+
+```sh
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+This will:
+1. Update the version in `plugin.cfg` to match the tag
+2. Build the plugin with the BlenderKit client
+3. Create a GitHub release with the ZIP attached
