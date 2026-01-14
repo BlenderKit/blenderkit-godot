@@ -2,6 +2,7 @@
 import argparse
 import configparser
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -144,6 +145,24 @@ def get_plugin_version() -> str:
     return config.get("plugin", "version").strip('"')
 
 
+def set_plugin_version(version: str):
+    config_path = os.path.join(PLUGIN_SRC_DIR, "blenderkit", "plugin.cfg")
+    version = version.lstrip("v")
+    print(f"# Setting version to {version} in {config_path}")
+
+    with open(config_path, "r") as f:
+        content = f.read()
+
+    new_content = re.sub(
+        r'^(version=)"[^"]*"', rf'\1"{version}"', content, flags=re.MULTILINE
+    )
+
+    with open(config_path, "w") as f:
+        f.write(new_content)
+
+    print(f"✓ Plugin version set to {version}")
+
+
 ### Command-Line Interface
 
 
@@ -218,6 +237,20 @@ parser_build_plugin.add_argument(
     type=str,
     default=RESULT_DIR,
     help="Path to BlenderKit Client sources.",
+)
+
+# COMMAND: set-version
+parser_set_version = subparsers.add_parser(
+    "set-version",
+    help="Set the plugin version in plugin.cfg.",
+    description="Set the plugin version in plugin.cfg.",
+    formatter_class=NiceHelpFormatter,
+)
+parser_set_version.set_defaults(func=set_plugin_version)
+parser_set_version.add_argument(
+    "version",
+    type=str,
+    help="Version string (e.g., 1.2.3 or v1.2.3).",
 )
 
 

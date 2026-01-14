@@ -1,0 +1,50 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (e.g., 1.0.0)'
+        required: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "stable"
+
+      - name: Set version from tag
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: python dev.py set-version ${{ github.ref_name }}
+
+      - name: Set version from input
+        if: github.event.inputs.version != ''
+        run: python dev.py set-version ${{ github.event.inputs.version }}
+
+      - name: Build Plugin
+        run: python dev.py build
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: out/*.zip
+          generate_release_notes: true
+          tag_name: ${{ github.ref_name || format('v{0}', github.event.inputs.version) }}
+          draft: ${{ !startsWith(github.ref, 'refs/tags/') }}
