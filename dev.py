@@ -29,6 +29,7 @@ def build(client_dir=CLIENT_DIR, result_dir=RESULT_DIR):
 
 
 def get_client_src():
+    """Clone or update BlenderKit Client repository."""
     print("# Getting BlenderKit Client sources")
     if os.path.exists(CLIENT_DIR):
         print(f"Client Repo exists at {CLIENT_DIR}, updating...")
@@ -45,6 +46,7 @@ def get_client_src():
 
 
 def build_client(client_dir=CLIENT_DIR):
+    """Build BlenderKit Client using its dev.py build script."""
     if client_dir == CLIENT_DIR:
         get_client_src()
     print("# Building BlenderKit Client with GO")
@@ -56,13 +58,14 @@ def build_client(client_dir=CLIENT_DIR):
 
 
 def copy_client_binaries(binaries_path: str, result_dir=RESULT_DIR):
+    """Copy client binaries from source path to result directory."""
     print(f"Copying Client binaries: {binaries_path} -> {result_dir}")
     if not os.path.exists(binaries_path):
         print(f"Client binaries path {binaries_path} does not exist, exiting.")
-        exit(1)
+        sys.exit(1)
     if not os.path.isdir(binaries_path):
         print(f"Client binaries path {binaries_path} is not a directory, exiting.")
-        exit(1)
+        sys.exit(1)
 
     client_version = os.path.basename(os.path.normpath(binaries_path))
     target_dir = os.path.join(result_dir, "client", client_version)
@@ -71,7 +74,7 @@ def copy_client_binaries(binaries_path: str, result_dir=RESULT_DIR):
     files = os.listdir(binaries_path)
     if not files:
         print(f"No Client binaries found in {binaries_path}, exiting.")
-        exit(1)
+        sys.exit(1)
 
     client_files = [f for f in files if f.startswith("blenderkit-client")]
     for file_name in client_files:
@@ -81,7 +84,7 @@ def copy_client_binaries(binaries_path: str, result_dir=RESULT_DIR):
         print(f"Copied: {target_file}")
 
     print(
-        f"{len(files)} BlenderKit-Client {client_version} binaries copied: {binaries_path} -> {target_dir}"
+        f"{len(client_files)} BlenderKit-Client {client_version} binaries copied: {binaries_path} -> {target_dir}"
     )
 
 
@@ -110,6 +113,7 @@ def build_plugin(client_dir=CLIENT_DIR):
 
 
 def find_client_bin_dir(client_dir=CLIENT_DIR):
+    """Find the latest client binaries directory in the client build output."""
     base_dir = os.path.join(client_dir, "out", "blenderkit", "client")
     dirs = [
         d
@@ -124,10 +128,12 @@ def find_client_bin_dir(client_dir=CLIENT_DIR):
 
 
 def get_archive_base_name(version: str) -> str:
+    """Generate archive base name from version string."""
     return f"{ARCHIVE_BASE_NAME}_v{version}"
 
 
 def get_plugin_version() -> str:
+    """Read plugin version from plugin.cfg."""
     config_path = os.path.join(PLUGIN_SRC_DIR, "blenderkit", "plugin.cfg")
     config = configparser.ConfigParser()
     config.read(config_path)
@@ -135,6 +141,7 @@ def get_plugin_version() -> str:
 
 
 def set_plugin_version(version: str):
+    """Update plugin version in plugin.cfg."""
     config_path = os.path.join(PLUGIN_SRC_DIR, "blenderkit", "plugin.cfg")
     version = version.lstrip("v")
     print(f"# Setting version to {version} in {config_path}")
@@ -282,15 +289,31 @@ parser_build = subparsers.add_parser(
     formatter_class=NiceHelpFormatter,
 )
 parser_build.set_defaults(func=build)
+parser_build.add_argument(
+    "-c",
+    "--client-dir",
+    type=str,
+    default=CLIENT_DIR,
+    dest="client_dir",
+    help="Path to BlenderKit Client sources.",
+)
+parser_build.add_argument(
+    "-o",
+    "--result-dir",
+    type=str,
+    default=RESULT_DIR,
+    dest="result_dir",
+    help="Output directory for the archive.",
+)
 
 # COMMAND: get-client-src
-parser_build = subparsers.add_parser(
+parser_get_client_src = subparsers.add_parser(
     "get-client-src",
     help="Get BlenderKit Client sources.",
     description="Get BlenderKit Client sources.",
     formatter_class=NiceHelpFormatter,
 )
-parser_build.set_defaults(func=get_client_src)
+parser_get_client_src.set_defaults(func=get_client_src)
 
 # COMMAND: build-client
 parser_build_client = subparsers.add_parser(
@@ -305,6 +328,7 @@ parser_build_client.add_argument(
     "--client-dir",
     type=str,
     default=CLIENT_DIR,
+    dest="client_dir",
     help="Path to BlenderKit Client sources.",
 )
 
@@ -321,6 +345,7 @@ parser_build_plugin.add_argument(
     "--client-dir",
     type=str,
     default=CLIENT_DIR,
+    dest="client_dir",
     help="Path to BlenderKit Client sources.",
 )
 
@@ -337,6 +362,7 @@ parser_build_archive.add_argument(
     "--result-dir",
     type=str,
     default=RESULT_DIR,
+    dest="result_dir",
     help="Output directory for the archive.",
 )
 
@@ -372,11 +398,8 @@ def main():
         parser.print_help()
         sys.exit(1)
 
-    # Process args to pass to command function
-    kwargs = dict(vars(args))
-    kwargs.pop("command")
-    kwargs.pop("func")
-    # Invoke function associated with the chosen command
+    # Extract kwargs for command function, excluding parser internals
+    kwargs = {k: v for k, v in vars(args).items() if k not in ("command", "func")}
     args.func(**kwargs)
 
 
