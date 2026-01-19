@@ -275,6 +275,21 @@ def clean():
     print("✓ Clean complete")
 
 
+def test(verbose=False, filter=None):
+    """Run pytest tests."""
+    print("# Running tests")
+
+    cmd = [sys.executable, "-m", "pytest"]
+
+    if verbose:
+        cmd.append("-v")
+    if filter:
+        cmd.extend(["-k", filter])
+
+    result = subprocess.run(cmd)
+    sys.exit(result.returncode)
+
+
 ### Command-Line Interface
 
 
@@ -400,6 +415,28 @@ parser_set_version.add_argument(
     "version",
     type=str,
     help="Version string (e.g., 1.2.3 or v1.2.3).",
+)
+
+# COMMAND: test
+parser_test = subparsers.add_parser(
+    "test",
+    help="Run pytest tests.",
+    description="Run pytest tests for the plugin.",
+    formatter_class=NiceHelpFormatter,
+)
+parser_test.set_defaults(func=test)
+parser_test.add_argument(
+    "-v",
+    "--verbose",
+    action="store_true",
+    help="Verbose output.",
+)
+parser_test.add_argument(
+    "-k",
+    "--filter",
+    type=str,
+    dest="filter",
+    help="Only run tests matching this expression.",
 )
 
 

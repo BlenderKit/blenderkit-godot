@@ -1,0 +1,1 @@
+# BlenderKit Godot Plugin Tests
