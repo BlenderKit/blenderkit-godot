@@ -1,2 +1,9 @@
+# client repo (cloned on-demand)
 /BlenderKit
-out
+# client binaries (built on-demand)
+/addons/blenderkit/client
+# downloaded assets
+/bk_assets
+/out
+.godot
+*.uid
