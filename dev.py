@@ -21,6 +21,17 @@ ARCHIVE_EXCLUDE = [
 ]
 
 
+def ensure_godot_ignore(ignore_dir: str):
+    """Ensure a .gdignore file exists in the directory (tells Godot to ignore it)."""
+    gdignore_path = os.path.join(ignore_dir, ".gdignore")
+    if os.path.exists(gdignore_path):
+        return
+    os.makedirs(ignore_dir, exist_ok=True)
+    with open(gdignore_path, "w") as f:
+        pass  # empty file is sufficient
+    print(f"Created {gdignore_path}")
+
+
 def build(client_dir=CLIENT_DIR, result_dir=RESULT_DIR):
     """Build BlenderKit Client and Plugin, then create archive."""
     build_client(client_dir=client_dir)
@@ -43,6 +54,7 @@ def get_client_src():
             ["git", "clone", "https://github.com/BlenderKit/BlenderKit.git"],
             check=True,
         )
+    ensure_godot_ignore(CLIENT_DIR)
 
 
 def build_client(client_dir=CLIENT_DIR):
@@ -224,6 +236,7 @@ def build_archive(result_dir=RESULT_DIR):
     print()
 
     os.makedirs(result_dir, exist_ok=True)
+    ensure_godot_ignore(result_dir)
     shutil.rmtree(plugin_out_dir, ignore_errors=True)
 
     # Copy with filtering
