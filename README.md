@@ -1,14 +1,32 @@
 # BlenderKit for Godot
 
-Simple yet effective [Godot Engine](https://godotengine.org/) add-on / plugin
-which enables direct import of models from
-[BlenderKit.com](https://blenderkit.com) into a Godot project.
+Simple yet effective [Godot Engine](https://godotengine.org/) 4 editor plugin
+which enables direct import of assets from
+[BlenderKit](https://blenderkit.com) into a Godot project.
 
-Add the BlenderKit add-on to your Godot project and then just select the models
-you need in the [BlenderKit.com](https://blenderkit.com) online gallery and send
-them directly into your Godot project with a single click on the asset page.
+Add this BlenderKit add-on to your Godot project and then just select models /
+materials you need in the [BlenderKit.com](https://blenderkit.com) online
+gallery in your browser and send them directly into your Godot project with a
+single click on **Send to Godot** button.
 
-★ Star this repo to show support and interest in continued development, thanks.
+Assets get downloaded into a directory of your choice in your Godot project,
+`bk_assets/` by default.
+
+You can process assets as you see fit, possibly building your own workflow /
+pipeline on top of this simple mechanism.
+
+
+## Status
+
+### alpha
+
+BlenderKit Godot plugin is in **active early development** focusing on polishing
+fundamentals (building, testing, integration) in order to provide a robust
+user experience, especially with distribution and installation.
+
+You are welcome to [contribute](#contributing) :)
+
+🌟 Star this repo to show support and interest in continued development, thanks 🌟
 
 ## Requirements
 
@@ -25,7 +43,7 @@ The Plugin needs to be installed for each Godot project:
 1. **Download** `blenderkit-godot-vX.Y.Z.zip` from [GitHub Releases](https://github.com/BlenderKit/blenderkit-godot/releases)
     - or [build](#Building) your own from sources.
 2. **Extract** the ZIP into your Godot project root directory (where `project.godot` is located)
-    - **DO NOT** copy `addons/` or `addons/blenderkit/` from the repo **wihtout building Client binaries** first. See [Building](#building).
+    - **DO NOT** copy `addons/` or `addons/blenderkit/` from the repo **without building Client binaries** first. See [Building](#building).
 3. Open your project in **Godot Editor**, go to **Project → Project Settings... → Plugins** tab
 4. Check **Enabled** for **BlenderKit**
 
@@ -41,7 +59,19 @@ you should see a new **BlenderKit** tab in the right panel dock (next to
 **Inspector**) of the Godot Editor.
 
 You can now browse and download assets from
-[blenderkit.com](https://blenderkit.com) in your browser and download them into your Godot project with a single click on the asset page.
+[BlenderKit.com](https://blenderkit.com) in your browser and download them into
+your Godot project with a single click on **Send to Godot** button.
+
+For example after downloading two models and one material:
+
+```
+bk_assets
+├── material
+│   └── resolution_4K_dbec842e-9f6e-43c8-ace4-9f815d3bd997.blend
+└── model
+    ├── resolution_2K_af103cc0-ffb5-46f1-b877-9a72b71d8c59.blend
+    └── resolution_4K_d110f837-ae04-4fee-b287-a7110ac44be4.blend
+```
 
 
 ## Directory Structure
@@ -79,8 +109,6 @@ sources into `BlenderKit/` (`./dev.py get-client-src`)
 
 The distributable ZIP will be at `out/blenderkit-godot_vX.Y.Z.zip`.
 
-**DO NOT** copy the `addons/` or `addons/blenderkit/` directly from the repo,
-those are just sources without the needed Client binaries.
 
 ## Development
 
@@ -93,7 +121,7 @@ Godot Editor for development and testing.
    ./dev.py build
    ```
 3. Open the project in Godot Editor
-4. Make changes to plugin in `addons/blenderkit/`
+4. Make changes to the plugin in `addons/blenderkit/`
 5. Test your changes directly in the editor
 
 Run `python dev.py` for a list of all available commands.
