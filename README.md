@@ -22,15 +22,16 @@ BlenderKit Godot Plugin requires:
 
 The Plugin needs to be installed for each Godot project:
 
-1. Download `blenderkit-godot-vX.Y.Z.zip` from [GitHub Releases](https://github.com/BlenderKit/blenderkit-godot/releases)
-    - or [build](#Building) your own from sources, tl;dr `./dev.py build`
-2. Extract the ZIP into your Godot project root directory (where `project.godot` is located)
-    - **DO NOT** copy the `addons/` or `addons/blenderkit/` directly from the
-    repo, that would miss Client binaries. See [Building](#building) instead.
-3. Open your project in Godot Editor, go to **Project → Project Settings... → Plugins** tab
-4. Check **Enabled** for BlenderKit
+1. **Download** `blenderkit-godot-vX.Y.Z.zip` from [GitHub Releases](https://github.com/BlenderKit/blenderkit-godot/releases)
+    - or [build](#Building) your own from sources.
+2. **Extract** the ZIP into your Godot project root directory (where `project.godot` is located)
+    - **DO NOT** copy `addons/` or `addons/blenderkit/` from the repo **wihtout building Client binaries** first. See [Building](#building).
+3. Open your project in **Godot Editor**, go to **Project → Project Settings... → Plugins** tab
+4. Check **Enabled** for **BlenderKit**
 
-If installation succeeded, you should see a new **BlenderKit** tab in the right panel dock (next to **Inspector**).
+If installation succeeded, you should see a new **BlenderKit** tab in the right
+panel dock (next to **Inspector**) as well as `BlenderKit:` messages in editor
+Output.
 
 
 ## Usage
@@ -47,7 +48,9 @@ You can now browse and download assets from
 
 - `addons/blenderkit/` - Godot plugin sources (standard Godot addon path)
 - `BlenderKit/` - BlenderKit client sources (cloned from upstream repo)
+- `tests/` - pytest test suite
 - `out/` - Build output directory (generated)
+- `project.godot` - Godot project file for development and testing
 
 
 ## Building
@@ -71,46 +74,54 @@ This does the following:
 - fetches [BlenderKit Client](https://github.com/BlenderKit/BlenderKit)
 sources into `BlenderKit/` (`./dev.py get-client-src`)
 - builds the BlenderKit Client using Go (`./dev.py build-client`)
-- builds the BlenderKit Godot plugin into a ZIP archive (`./dev.py build-plugin`)
+- copies client binaries into the plugin directory (`./dev.py build-plugin`)
+- creates a distributable ZIP archive (`./dev.py build-archive`)
 
 The distributable ZIP will be at `out/blenderkit-godot_vX.Y.Z.zip`.
-
-You can also copy/link `out/addons/blenderkit/` to your Godot project's `addons/blenderkit/` directory after build succeeded.
 
 **DO NOT** copy the `addons/` or `addons/blenderkit/` directly from the repo,
 those are just sources without the needed Client binaries.
 
 ## Development
 
+This repository is set up as a Godot project, so you can open it directly in
+Godot Editor for development and testing.
+
 1. Clone this repository
-2. Get the BlenderKit client sources:
-   ```sh
-   ./dev.py get-client-src
-   ```
-3. Make changes to plugin in `addons/blenderkit/`
-4. Build and test:
+2. Build (fetches client sources and builds everything):
    ```sh
    ./dev.py build
    ```
-5. Copy or link `out/addons/blenderkit/` to your Godot project's `addons/` directory
+3. Open the project in Godot Editor
+4. Make changes to plugin in `addons/blenderkit/`
+5. Test your changes directly in the editor
 
-Run
-
-```
-python dev.py
-```
-
-for a list of all available commands.
+Run `python dev.py` for a list of all available commands.
 
 | Command | Description |
 |---------|-------------|
-| `build` | Full build: client + plugin |
+| `build` | Full build: client + plugin + archive |
 | `get-client-src` | Clone/update BlenderKit client repository |
 | `build-client` | Build only the Go client |
-| `build-plugin` | Package plugin with existing client binaries |
+| `build-plugin` | Copy client binaries into plugin directory |
+| `build-archive` | Create filtered ZIP archive of the plugin |
+| `clean` | Remove build artifacts (`out/` and client binaries) |
 | `set-version` | Set plugin version in `plugin.cfg` |
+| `test` | Run pytest tests |
 
 Run `./dev.py <command> --help` for command-specific options.
+
+
+## Testing
+
+Run the test suite with:
+
+```sh
+./dev.py test
+```
+
+Tests use pytest with fixtures for running Godot in headless editor mode.
+Use `-v` for verbose output or `-k <pattern>` to filter tests.
 
 
 ## Releasing
