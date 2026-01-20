@@ -22,9 +22,26 @@ pipeline on top of this simple mechanism.
 
 BlenderKit Godot plugin is in **active early development** focusing on polishing
 fundamentals (building, testing, integration) in order to provide a robust
-user experience, especially with distribution and installation.
+user and developer experience, including distribution and installation.
 
-You are welcome to [contribute](#contributing) :)
+**IMPORTANT:** Godot Blender imports are relatively young and many `.blend` files can
+import incorrectly or not import at all with ample amount of warnings and errors
+printed to Godot Output. As of Godot 4.5.1, Blender 3 is required while Blender
+5 has been out for some time.
+
+This plugin will get increasingly more useful as native Blender -> Godot import
+improves.
+
+Alongside this upstream effort, we at [BlenderKit](https://blenderkit.com) are
+experimenting with our own **GLTF** export as it's Godot's intended default
+import format where highest degree of compatibility should be expected.
+
+Once **GLTF** export support matures, the BlenderKit plugin might provide an option to
+prefer `.gltf` over `.blend`, possibly on by default.
+
+As of now, please consider this software **experimental**.
+
+You are welcome to [contribute](#contributing) 💪
 
 🌟 Star this repo to show support and interest in continued development, thanks 🌟
 
