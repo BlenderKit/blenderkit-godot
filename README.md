@@ -7,13 +7,19 @@ which enables direct import of assets from
 Add this BlenderKit add-on to your Godot project and then just select models /
 materials you need in the [BlenderKit.com](https://blenderkit.com) online
 gallery in your browser and send them directly into your Godot project with a
-single click on **Send to Godot** button.
+single click on the **Send to Godot** button.
 
 Assets get downloaded into a directory of your choice in your Godot project,
 `bk_assets/` by default.
 
 You can process assets as you see fit, possibly building your own workflow /
 pipeline on top of this simple mechanism.
+
+This project is Free and Open Source Software under GPLv2.
+
+[Contributions](#contributing) are highly encouraged and welcome 🤝
+
+⭐ Star this repo to show support and interest in continued development, thanks!
 
 
 ## Status
@@ -24,12 +30,17 @@ BlenderKit Godot plugin is in **active early development** focusing on polishing
 fundamentals (building, testing, integration) in order to provide a robust
 user and developer experience, including distribution and installation.
 
+As of now, please consider this software **experimental** 🧪
+
+It's a great time to test and [contribute](#contributing) so that the
+plugin is useful for you and everyone else.
+
 **IMPORTANT:** Godot Blender imports are relatively young and many `.blend` files can
 import incorrectly or not import at all with ample amount of warnings and errors
 printed to Godot Output. As of Godot 4.5.1, Blender 3 is required while Blender
 5 has been out for some time.
 
-This plugin will get increasingly more useful as native Blender -> Godot import
+This plugin will get increasingly useful as native Blender -> Godot import
 improves.
 
 Alongside this upstream effort, we at [BlenderKit](https://blenderkit.com) are
@@ -37,13 +48,8 @@ experimenting with our own **GLTF** export as it's Godot's intended default
 import format where highest degree of compatibility should be expected.
 
 Once **GLTF** export support matures, the BlenderKit plugin might provide an option to
-prefer `.gltf` over `.blend`, possibly on by default.
+prefer `.gltf` / `.glb` over `.blend`, possibly on by default.
 
-As of now, please consider this software **experimental**.
-
-You are welcome to [contribute](#contributing) 💪
-
-🌟 Star this repo to show support and interest in continued development, thanks 🌟
 
 ## Requirements
 
@@ -52,15 +58,19 @@ BlenderKit Godot Plugin requires:
 - Godot Engine: **4.X**
 - OS: **Linux**, **MacOS**, **Windows**
 - Architectures: **x86_64**, **arm64**
+- Web browser
+- [BlenderKit.com](https://blenderkit.com) account (free, no payment or credit card required)
+
 
 ## Installation
 
 The Plugin needs to be installed for each Godot project:
 
 1. **Download** `blenderkit-godot-vX.Y.Z.zip` from [GitHub Releases](https://github.com/BlenderKit/blenderkit-godot/releases)
-    - or [build](#Building) your own from sources.
+    - or [build](#building) your own from sources.
 2. **Extract** the ZIP into your Godot project root directory (where `project.godot` is located)
-    - **DO NOT** copy `addons/` or `addons/blenderkit/` from the repo **without building Client binaries** first. See [Building](#building).
+    - **DO NOT** copy `addons/` or `addons/blenderkit/` from this repo without
+    [building](#building) Client binaries first.
 3. Open your project in **Godot Editor**, go to **Project → Project Settings... → Plugins** tab
 4. Check **Enabled** for **BlenderKit**
 
@@ -75,9 +85,13 @@ After BlenderKit Godot plugin is installed and enabled in your Godot project,
 you should see a new **BlenderKit** tab in the right panel dock (next to
 **Inspector**) of the Godot Editor.
 
-You can now browse and download assets from
-[BlenderKit.com](https://blenderkit.com) in your browser and download them into
-your Godot project with a single click on **Send to Godot** button.
+You need to login to [BlenderKit.com](https://blenderkit.com) in a web browser.
+Free and Paid plans are supported. You don't need a credit card to get free
+assets, but you can access paid assets should you decide to support artists.
+
+You can now browse assets from [BlenderKit.com](https://blenderkit.com) in your
+browser and download them into your Godot project with a single click on the **Send
+to Godot** button right on the asset page.
 
 For example after downloading two models and one material:
 
@@ -89,6 +103,10 @@ bk_assets
     ├── resolution_2K_af103cc0-ffb5-46f1-b877-9a72b71d8c59.blend
     └── resolution_4K_d110f837-ae04-4fee-b287-a7110ac44be4.blend
 ```
+
+Better naming and even converting to Godot native formats might get implemented
+in the future, but for now we're focusing on the foundation - one click
+to get an asset into your Godot project reliably.
 
 
 ## Directory Structure
@@ -183,6 +201,14 @@ This will:
 2. Build the plugin with the BlenderKit client
 3. Create a GitHub release with the ZIP attached
 
+
 ## Contributing
 
-Contributions are most welcome! Feel free to open an Issue or submit a Pull Request or drop a comment <3
+This project is Free and Open Source Software under GPLv2.
+
+**Contributions are highly encouraged and welcome 🤝**
+
+If you hit a bug or you wish something worked better, simply open a GitHub
+[Issue](https://github.com/BlenderKit/blenderkit-godot/issues).
+
+The better you describe the problem, the easier it will be to fix.
