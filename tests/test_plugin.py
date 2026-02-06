@@ -18,7 +18,7 @@ class TestPluginLoads:
         """Plugin should enable and log its initialization."""
         r = run_godot_editor()
 
-        assert_output(r, r"BlenderKit: Plugin enabled")
-        assert_output(r, r"BlenderKit: Searching for running Client...")
-        assert_output(r, r"BlenderKit: Connected to Client v[.0-9]+ on port \d+")
-        assert_output(r, r"BlenderKit: Plugin exited")
+        assert_output(r, r"BlenderKit INFO: Plugin enabled")
+        assert_output(r, r"BlenderKit INFO: Searching for running Client...")
+        assert_output(r, r"BlenderKit INFO: Connected to Client v[.0-9]+ on port \d+")
+        assert_output(r, r"BlenderKit INFO: Plugin exited")
