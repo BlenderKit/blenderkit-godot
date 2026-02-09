@@ -16,9 +16,7 @@ RESULT_DIR = "out"
 ARCHIVE_BASE_NAME = "blenderkit-godot"
 PLUGIN_CLIENT_DIR = os.path.join(PLUGIN_SRC_DIR, PLUGIN_DIR, "client")
 
-ARCHIVE_EXCLUDE = [
-    "*.uid",
-]
+ARCHIVE_EXCLUDE = []
 
 
 def ensure_godot_ignore(ignore_dir: str):
