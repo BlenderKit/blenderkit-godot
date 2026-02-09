@@ -40,14 +40,10 @@ def build(client_dir=CLIENT_DIR, result_dir=RESULT_DIR):
 
 
 def get_client_src():
-    """Clone or update BlenderKit Client repository."""
+    """Clone BlenderKit Client repository if it doesn't exist."""
     print("# Getting BlenderKit Client sources")
     if os.path.exists(CLIENT_DIR):
-        print(f"Client Repo exists at {CLIENT_DIR}, updating...")
-        subprocess.run(
-            ["git", "-C", CLIENT_DIR, "pull"],
-            check=True,
-        )
+        print(f"Client Repo already exists at {CLIENT_DIR}, skipping.")
     else:
         print(f"Cloning Client Repo to {CLIENT_DIR}...")
         subprocess.run(
