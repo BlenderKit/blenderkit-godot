@@ -4,7 +4,7 @@ extends EditorPlugin
 const SERVER = "https://www.blenderkit.com"
 const CLIENT_PORTS = ["62485", "65425", "55428"]
 #const CLIENT_PORTS = ["62485", "65425", "55428", "49452", "35452", "25152", "5152", "1234"]
-const WAIT_OK: float = 0.5
+const WAIT_OK: float = 0.8
 const WAIT_EXPLORING: float = 0.2
 const WAIT_STARTING: float = 1
 const REQUEST_TIMEOUT: int = 3000
