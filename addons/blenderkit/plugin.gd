@@ -92,6 +92,8 @@ var fail_reason: String = ""
 
 var download_dir: String = "res://bk_assets/"
 var absolute_download_path: String
+var model_format: String = "gltf_godot"
+var resolution: String = "resolution_2K"
 var port: String = CLIENT_PORTS[0]
 var failed_requests: int = 0
 var max_failed_requests: int = 3
@@ -117,6 +119,8 @@ var log_level_option_button: OptionButton
 var version_label: Label
 var browse_assets_button: Button
 var download_directory: LineEdit
+var model_format_option_button: OptionButton
+var resolution_option_button: OptionButton
 
 
 func _enter_tree():
@@ -292,6 +296,8 @@ func on_timer_timeout():
 		"addonVersion": get_addon_version(),
 		"assetsPath": absolute_download_path,
 		"projectName": ProjectSettings.get_setting("application/config/name"),
+		"modelFormat": model_format,
+		"resolution": resolution,
 	}
 	var json = JSON.stringify(data)
 	request_start_time = Time.get_ticks_msec()
@@ -388,6 +394,17 @@ func on_log_level_changed(index: int):
 	bk_log(LogLevel.INFO, "Log level set to %s" % LOG_LEVEL_NAMES[log_level])
 
 
+func on_model_format_changed(index: int):
+	model_format = "gltf_godot" if index == 0 else "blend"
+	ProjectSettings.set_setting("blenderkit/model_format", model_format)
+
+
+func on_resolution_changed(index: int):
+	var map = ["resolution_4K", "resolution_2K", "resolution_1K", "resolution_0_5K"]
+	resolution = map[index]
+	ProjectSettings.set_setting("blenderkit/resolution", resolution)
+
+
 func init_paths():
 	absolute_download_path = ProjectSettings.globalize_path(download_dir)
 	client_bin_name = get_client_binary_name()
@@ -419,6 +436,15 @@ func init_ui():
 	log_level_option_button = docked_menu_scene.get_node("LogLevel/OptionButton")
 	log_level_option_button.selected = log_level
 	log_level_option_button.item_selected.connect(on_log_level_changed)
+	model_format_option_button = docked_menu_scene.get_node("ModelFormat/OptionButton")
+	model_format = ProjectSettings.get_setting("blenderkit/model_format", "gltf_godot")
+	model_format_option_button.selected = 0 if model_format == "gltf_godot" else 1
+	model_format_option_button.item_selected.connect(on_model_format_changed)
+	resolution_option_button = docked_menu_scene.get_node("Resolution/OptionButton")
+	resolution = ProjectSettings.get_setting("blenderkit/resolution", "resolution_2K")
+	var res_index_map = {"resolution_4K": 0, "resolution_2K": 1, "resolution_1K": 2, "resolution_0_5K": 3}
+	resolution_option_button.selected = res_index_map.get(resolution, 1)
+	resolution_option_button.item_selected.connect(on_resolution_changed)
 
 
 func cleanup_ui():

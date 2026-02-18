@@ -107,6 +107,44 @@ text = "Download to:"
 layout_mode = 2
 text = "res://bk_assets"
 
+[node name="ModelFormat" type="HSplitContainer" parent="."]
+layout_mode = 2
+tooltip_text = "Choose whether to download GLTF files (recommended for Godot) or original .blend files."
+
+[node name="Label" type="Label" parent="ModelFormat"]
+layout_mode = 2
+text = "Model format:"
+
+[node name="OptionButton" type="OptionButton" parent="ModelFormat"]
+layout_mode = 2
+selected = 0
+item_count = 2
+popup/item_0/text = "Prefer GLTF (.gltf/.glb)"
+popup/item_0/id = 0
+popup/item_1/text = "Original (.blend)"
+popup/item_1/id = 1
+
+[node name="Resolution" type="HSplitContainer" parent="."]
+layout_mode = 2
+tooltip_text = "Resolution for .blend files. Also used as fallback when GLTF is unavailable."
+
+[node name="Label" type="Label" parent="Resolution"]
+layout_mode = 2
+text = "Resolution:"
+
+[node name="OptionButton" type="OptionButton" parent="Resolution"]
+layout_mode = 2
+selected = 1
+item_count = 4
+popup/item_0/text = "4K"
+popup/item_0/id = 0
+popup/item_1/text = "2K"
+popup/item_1/id = 1
+popup/item_2/text = "1K"
+popup/item_2/id = 2
+popup/item_3/text = "0.5K"
+popup/item_3/id = 3
+
 [node name="LogLevel" type="HSplitContainer" parent="." unique_id=430294945]
 layout_mode = 2
 tooltip_text = "Port on which the plugin will start Client and expect it to run."
