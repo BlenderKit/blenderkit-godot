@@ -112,7 +112,8 @@ var client_bin_path: String
 # GUI
 const menu_scene = preload("res://addons/blenderkit/menu.tscn")
 var docked_menu_scene: Control
-var enabled_check_button: CheckButton
+var enabled_check_box: CheckBox
+var status_icon: TextureRect
 var status_label: Label
 var port_option_button: OptionButton
 var log_level_option_button: OptionButton
@@ -140,7 +141,7 @@ func _enter_tree():
 	timer.timeout.connect(on_timer_timeout)
 
 	init_ui()
-	if enabled_check_button.is_pressed():
+	if enabled_check_box.is_pressed():
 		enter_state(State.EXPLORING)
 
 
@@ -206,6 +207,20 @@ func update_status():
 				status_label.text = "Connected (port %s)" % port
 		State.FAILED:
 			status_label.text = "Failed (%s)" % fail_reason
+	if status_icon:
+		status_icon.texture = get_state_icon()
+
+
+func get_state_icon() -> Texture2D:
+	var icon_name: String
+	match state:
+		State.DISABLED: icon_name = "NodeDisabled"
+		State.EXPLORING: icon_name = "Search"
+		State.STARTING: icon_name = "Timer"
+		State.CONNECTED: icon_name = "StatusSuccess"
+		State.FAILED: icon_name = "StatusError"
+		_: return null
+	return docked_menu_scene.get_theme_icon(icon_name, "EditorIcons")
 
 
 func start_client(port: String):
@@ -422,9 +437,10 @@ func find_packed_client():
 func init_ui():
 	docked_menu_scene = menu_scene.instantiate()
 	add_control_to_dock(EditorPlugin.DOCK_SLOT_RIGHT_UL, docked_menu_scene)
-	enabled_check_button = docked_menu_scene.get_node("StatusRow/Enabled/CheckButton")
-	enabled_check_button.toggled.connect(on_enabled_toggled)
-	status_label = docked_menu_scene.get_node("StatusRow/Status/Label")
+	enabled_check_box = docked_menu_scene.get_node("EnabledCheckBox")
+	enabled_check_box.toggled.connect(on_enabled_toggled)
+	status_icon = docked_menu_scene.get_node("StatusRow/StatusIcon")
+	status_label = docked_menu_scene.get_node("StatusRow/StatusLabel")
 	port_option_button = docked_menu_scene.get_node("Port/OptionButton")
 	version_label = docked_menu_scene.get_node("DocsContainer/HSplitContainer/Version")
 	version_label.text = "BlenderKit v%s" % get_addon_version()
@@ -445,6 +461,7 @@ func init_ui():
 	var res_index_map = {"resolution_4K": 0, "resolution_2K": 1, "resolution_1K": 2, "resolution_0_5K": 3}
 	resolution_option_button.selected = res_index_map.get(resolution, 1)
 	resolution_option_button.item_selected.connect(on_resolution_changed)
+	update_status()
 
 
 func cleanup_ui():

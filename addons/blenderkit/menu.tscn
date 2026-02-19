@@ -1,58 +1,55 @@
 [gd_scene format=3 uid="uid://ijjjf42k124s"]
 
-[node name="BlenderKit" type="VBoxContainer" unique_id=2130963006]
+[node name="BlenderKit" type="VBoxContainer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="StatusRow" type="HSplitContainer" parent="." unique_id=1377997025]
-layout_mode = 2
-
-[node name="Enabled" type="HSplitContainer" parent="StatusRow" unique_id=2042131346]
-layout_mode = 2
-tooltip_text = "Enable plugin to start Client and connect to it. The Client is responsible for communication between Godot and Asset Gallery in the browser."
-
-[node name="Label" type="Label" parent="StatusRow/Enabled" unique_id=1049356319]
-layout_mode = 2
-text = "Enabled:"
-
-[node name="CheckButton" type="CheckButton" parent="StatusRow/Enabled" unique_id=1192570025]
+[node name="EnabledCheckBox" type="CheckBox" parent="."]
 layout_mode = 2
 button_pressed = true
+text = "BlenderKit Client Enabled"
 
-[node name="Status" type="HSplitContainer" parent="StatusRow" unique_id=1019406461]
+[node name="StatusRow" type="HBoxContainer" parent="."]
 layout_mode = 2
-size_flags_horizontal = 10
 tooltip_text = "Status of the plugin's connection to locally running Client. Successful connection allows direct and automated downloads from the browser."
+theme_override_constants/separation = 3
 
-[node name="LabelDescription" type="Label" parent="StatusRow/Status" unique_id=1727534990]
+[node name="LeftMargin" type="Control" parent="StatusRow"]
+custom_minimum_size = Vector2(4, 0)
 layout_mode = 2
-text = "Client:"
 
-[node name="Label" type="Label" parent="StatusRow/Status" unique_id=1259756867]
+[node name="StatusIcon" type="TextureRect" parent="StatusRow"]
+custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
-text = "---"
+expand_mode = 1
+stretch_mode = 5
 
-[node name="Spacer" type="VBoxContainer" parent="." unique_id=278229451]
+[node name="StatusLabel" type="Label" parent="StatusRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Client Status"
+
+[node name="Spacer" type="Control" parent="."]
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.02
 
-[node name="BrowseAssets" type="Button" parent="." unique_id=1262874803]
+[node name="BrowseAssets" type="Button" parent="."]
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.31
 tooltip_text = "Open BlenderKit asset gallery in your browser. Choose the assets you like and download them directly and automatically into this Godot project."
 text = "Browse Assets"
 
-[node name="Spacer2" type="VBoxContainer" parent="." unique_id=2115031075]
+[node name="Spacer2" type="Control" parent="."]
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.05
 
-[node name="RichTextLabel" type="RichTextLabel" parent="." unique_id=432486503]
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
 visible = false
 layout_mode = 2
 text = "BlenderKit add-on for Godot.
@@ -64,16 +61,74 @@ text = "BlenderKit add-on for Godot.
 "
 fit_content = true
 
-[node name="Port" type="HSplitContainer" parent="." unique_id=1071575799]
+[node name="DownloadTo" type="HBoxContainer" parent="."]
+layout_mode = 2
+tooltip_text = "Directory into which the plugin will download the assets."
+
+[node name="Label" type="Label" parent="DownloadTo"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Download To"
+
+[node name="LineEdit" type="LineEdit" parent="DownloadTo"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "res://bk_assets"
+
+[node name="ModelFormat" type="HBoxContainer" parent="."]
+layout_mode = 2
+tooltip_text = "Choose whether to download GLTF files (recommended for Godot) or original .blend files."
+
+[node name="Label" type="Label" parent="ModelFormat"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Model Format"
+
+[node name="OptionButton" type="OptionButton" parent="ModelFormat"]
+layout_mode = 2
+size_flags_horizontal = 3
+selected = 0
+item_count = 2
+popup/item_0/text = "Prefer GLTF (.glb)"
+popup/item_0/id = 0
+popup/item_1/text = "Blender (.blend)"
+popup/item_1/id = 1
+
+[node name="Resolution" type="HBoxContainer" parent="."]
+layout_mode = 2
+tooltip_text = "Resolution for .blend files. Also used as fallback when GLTF is unavailable."
+
+[node name="Label" type="Label" parent="Resolution"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Resolution"
+
+[node name="OptionButton" type="OptionButton" parent="Resolution"]
+layout_mode = 2
+size_flags_horizontal = 3
+selected = 1
+item_count = 4
+popup/item_0/text = "4K"
+popup/item_0/id = 0
+popup/item_1/text = "2K"
+popup/item_1/id = 1
+popup/item_2/text = "1K"
+popup/item_2/id = 2
+popup/item_3/text = "0.5K"
+popup/item_3/id = 3
+
+[node name="Port" type="HBoxContainer" parent="."]
 layout_mode = 2
 tooltip_text = "Port on which the plugin will start Client and expect it to run."
 
-[node name="Label" type="Label" parent="Port" unique_id=1006131606]
+[node name="Label" type="Label" parent="Port"]
 layout_mode = 2
-text = "Client port:"
+size_flags_horizontal = 3
+text = "Port"
 
-[node name="OptionButton" type="OptionButton" parent="Port" unique_id=1683054862]
+[node name="OptionButton" type="OptionButton" parent="Port"]
 layout_mode = 2
+size_flags_horizontal = 3
 selected = 0
 item_count = 8
 popup/item_0/text = "62485"
@@ -93,68 +148,18 @@ popup/item_6/id = 6
 popup/item_7/text = "1234"
 popup/item_7/id = 7
 
-[node name="DownloadTo" type="HSplitContainer" parent="." unique_id=1681529575]
+[node name="LogLevel" type="HBoxContainer" parent="."]
 layout_mode = 2
-tooltip_text = "Directory into which the plugin will download the assets."
-split_offsets = PackedInt32Array(103)
-split_offset = 103
+tooltip_text = "Log level for the plugin's output."
 
-[node name="Label" type="Label" parent="DownloadTo" unique_id=1608359190]
+[node name="Label" type="Label" parent="LogLevel"]
 layout_mode = 2
-text = "Download to:"
+size_flags_horizontal = 3
+text = "Log Level"
 
-[node name="LineEdit" type="LineEdit" parent="DownloadTo" unique_id=683365041]
+[node name="OptionButton" type="OptionButton" parent="LogLevel"]
 layout_mode = 2
-text = "res://bk_assets"
-
-[node name="ModelFormat" type="HSplitContainer" parent="."]
-layout_mode = 2
-tooltip_text = "Choose whether to download GLTF files (recommended for Godot) or original .blend files."
-
-[node name="Label" type="Label" parent="ModelFormat"]
-layout_mode = 2
-text = "Model format:"
-
-[node name="OptionButton" type="OptionButton" parent="ModelFormat"]
-layout_mode = 2
-selected = 0
-item_count = 2
-popup/item_0/text = "Prefer GLTF (.gltf/.glb)"
-popup/item_0/id = 0
-popup/item_1/text = "Original (.blend)"
-popup/item_1/id = 1
-
-[node name="Resolution" type="HSplitContainer" parent="."]
-layout_mode = 2
-tooltip_text = "Resolution for .blend files. Also used as fallback when GLTF is unavailable."
-
-[node name="Label" type="Label" parent="Resolution"]
-layout_mode = 2
-text = "Resolution:"
-
-[node name="OptionButton" type="OptionButton" parent="Resolution"]
-layout_mode = 2
-selected = 1
-item_count = 4
-popup/item_0/text = "4K"
-popup/item_0/id = 0
-popup/item_1/text = "2K"
-popup/item_1/id = 1
-popup/item_2/text = "1K"
-popup/item_2/id = 2
-popup/item_3/text = "0.5K"
-popup/item_3/id = 3
-
-[node name="LogLevel" type="HSplitContainer" parent="." unique_id=430294945]
-layout_mode = 2
-tooltip_text = "Port on which the plugin will start Client and expect it to run."
-
-[node name="Label" type="Label" parent="LogLevel" unique_id=477332043]
-layout_mode = 2
-text = "Log level:"
-
-[node name="OptionButton" type="OptionButton" parent="LogLevel" unique_id=1661994611]
-layout_mode = 2
+size_flags_horizontal = 3
 selected = 3
 item_count = 6
 popup/item_0/text = "ERROR"
@@ -170,27 +175,27 @@ popup/item_4/id = 4
 popup/item_5/text = "TRACE"
 popup/item_5/id = 5
 
-[node name="DocsContainer" type="HSplitContainer" parent="." unique_id=885847469]
+[node name="DocsContainer" type="HSplitContainer" parent="."]
 layout_mode = 2
 size_flags_vertical = 10
 
-[node name="HSplitContainer" type="HSplitContainer" parent="DocsContainer" unique_id=898715497]
+[node name="HSplitContainer" type="HSplitContainer" parent="DocsContainer"]
 layout_mode = 2
 
-[node name="Version" type="Label" parent="DocsContainer/HSplitContainer" unique_id=183553318]
+[node name="Version" type="Label" parent="DocsContainer/HSplitContainer"]
 layout_mode = 2
 text = "BlenderKit plugin"
 
-[node name="Links" type="HSplitContainer" parent="DocsContainer" unique_id=1286106916]
+[node name="Links" type="HSplitContainer" parent="DocsContainer"]
 layout_mode = 2
 size_flags_horizontal = 10
 
-[node name="OpenDocs" type="LinkButton" parent="DocsContainer/Links" unique_id=1763329800]
+[node name="OpenDocs" type="LinkButton" parent="DocsContainer/Links"]
 layout_mode = 2
 text = "Documentation"
 uri = "https://github.com/BlenderKit/blenderkit-godot"
 
-[node name="OpenIssues" type="LinkButton" parent="DocsContainer/Links" unique_id=2036425710]
+[node name="OpenIssues" type="LinkButton" parent="DocsContainer/Links"]
 layout_mode = 2
 text = "Report a Bug"
 uri = "https://github.com/BlenderKit/blenderkit-godot/issues"
