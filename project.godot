@@ -15,6 +15,11 @@ run/main_scene="uid://bf0vn6ptsssq1"
 config/features=PackedStringArray("4.5", "GL Compatibility")
 #config/icon="res://icon.svg"
 
+[blenderkit]
+
+model_format="gltf_godot"
+resolution="resolution_2K"
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/blenderkit/plugin.cfg")

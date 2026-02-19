@@ -111,6 +111,7 @@ var client_bin_path: String
 
 # GUI
 const menu_scene = preload("res://addons/blenderkit/menu.tscn")
+const download_progress_bar_scene = preload("res://addons/blenderkit/ui/download_progress_bar.tscn")
 var docked_menu_scene: Control
 var enabled_check_box: CheckBox
 var status_icon: TextureRect
@@ -122,6 +123,8 @@ var browse_assets_button: Button
 var download_directory: LineEdit
 var model_format_option_button: OptionButton
 var resolution_option_button: OptionButton
+var downloads_container: VBoxContainer
+var download_bars: Dictionary = {}
 
 
 func _enter_tree():
@@ -342,6 +345,9 @@ func on_request_completed(result, response_code, _headers, body):
 		var level: int = int(data.get("message_level", LogLevel.INFO))
 		if msg and level <= log_level:
 			bk_log(level, "Client: %s" % msg)
+		var tasks = data.get("tasks", [])
+		if tasks:
+			handle_tasks(tasks)
 		return
 
 	if state == State.EXPLORING:
@@ -461,12 +467,38 @@ func init_ui():
 	var res_index_map = {"resolution_4K": 0, "resolution_2K": 1, "resolution_1K": 2, "resolution_0_5K": 3}
 	resolution_option_button.selected = res_index_map.get(resolution, 1)
 	resolution_option_button.item_selected.connect(on_resolution_changed)
+	downloads_container = docked_menu_scene.get_node("DownloadsContainer")
 	update_status()
 
 
 func cleanup_ui():
+	download_bars.clear()
 	remove_control_from_docks(docked_menu_scene)
 	docked_menu_scene.queue_free()
+
+
+func handle_tasks(tasks: Array) -> void:
+	for task in tasks:
+		if task.get("task_type") != "asset_download":
+			continue
+		var task_id: String = task.get("task_id", "")
+		if task_id == "":
+			continue
+
+		var bar
+		if download_bars.has(task_id):
+			bar = download_bars[task_id]
+		else:
+			bar = download_progress_bar_scene.instantiate()
+			downloads_container.add_child(bar)
+			downloads_container.move_child(bar, 0)
+			download_bars[task_id] = bar
+
+		bar.apply_task(task)
+
+		var status: String = task.get("status", "")
+		if status in ["finished", "error"]:
+			download_bars.erase(task_id)
 
 
 func get_addon_version():

@@ -24,6 +24,6 @@ offset_right = 20.0
 offset_bottom = 11.5
 grow_horizontal = 2
 grow_vertical = 2
-text = "3 % of 1024 B"
+text = "3 % file_name.blend"
 
 [connection signal="value_changed" from="." to="." method="_on_value_changed"]

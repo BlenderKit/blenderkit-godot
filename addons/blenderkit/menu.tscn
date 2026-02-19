@@ -1,6 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://ijjjf42k124s"]
-
-[ext_resource type="PackedScene" uid="uid://8t50aghjcsc8" path="res://addons/blenderkit/ui/download_progress_bar.tscn" id="1_mbfh6"]
+[gd_scene load_steps=2 format=3 uid="uid://ijjjf42k124s"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m2h48"]
 bg_color = Color(0, 0, 0, 0.13725491)
@@ -206,9 +204,6 @@ text = "Downloads"
 horizontal_alignment = 1
 
 [node name="DownloadsContainer" type="VBoxContainer" parent="."]
-layout_mode = 2
-
-[node name="DownloadProgressBar" parent="DownloadsContainer" instance=ExtResource("1_mbfh6")]
 layout_mode = 2
 
 [node name="DocsContainer" type="HSplitContainer" parent="."]
