@@ -1,9 +1,16 @@
-[gd_scene format=3 uid="uid://ijjjf42k124s"]
+[gd_scene load_steps=3 format=3 uid="uid://ijjjf42k124s"]
+
+[ext_resource type="PackedScene" uid="uid://8t50aghjcsc8" path="res://addons/blenderkit/ui/download_progress_bar.tscn" id="1_mbfh6"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m2h48"]
+bg_color = Color(0, 0, 0, 0.13725491)
 
 [node name="BlenderKit" type="VBoxContainer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_right = -773.0
+offset_bottom = -9.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -47,7 +54,7 @@ text = "Browse Assets"
 [node name="Spacer2" type="Control" parent="."]
 layout_mode = 2
 size_flags_vertical = 3
-size_flags_stretch_ratio = 0.05
+size_flags_stretch_ratio = 0.03
 
 [node name="RichTextLabel" type="RichTextLabel" parent="."]
 visible = false
@@ -61,6 +68,15 @@ text = "BlenderKit add-on for Godot.
 "
 fit_content = true
 
+[node name="SettingsPanel" type="PanelContainer" parent="."]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_m2h48")
+
+[node name="SettingsLabel" type="Label" parent="SettingsPanel"]
+layout_mode = 2
+text = "Settings"
+horizontal_alignment = 1
+
 [node name="DownloadTo" type="HBoxContainer" parent="."]
 layout_mode = 2
 tooltip_text = "Directory into which the plugin will download the assets."
@@ -68,7 +84,7 @@ tooltip_text = "Directory into which the plugin will download the assets."
 [node name="Label" type="Label" parent="DownloadTo"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Download To"
+text = "Download to"
 
 [node name="LineEdit" type="LineEdit" parent="DownloadTo"]
 layout_mode = 2
@@ -174,6 +190,26 @@ popup/item_4/text = "DEBUG"
 popup/item_4/id = 4
 popup/item_5/text = "TRACE"
 popup/item_5/id = 5
+
+[node name="Spacer3" type="Control" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.1
+
+[node name="DownloadsPanel" type="PanelContainer" parent="."]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_m2h48")
+
+[node name="DownloadsLabel" type="Label" parent="DownloadsPanel"]
+layout_mode = 2
+text = "Downloads"
+horizontal_alignment = 1
+
+[node name="DownloadsContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="DownloadProgressBar" parent="DownloadsContainer" instance=ExtResource("1_mbfh6")]
+layout_mode = 2
 
 [node name="DocsContainer" type="HSplitContainer" parent="."]
 layout_mode = 2
