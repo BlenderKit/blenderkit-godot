@@ -4,8 +4,8 @@ Simple yet effective [Godot Engine](https://godotengine.org/) 4 editor plugin
 which enables direct import of assets from
 [BlenderKit](https://blenderkit.com) into a Godot project.
 
-Add this BlenderKit add-on to your Godot project and then just select models /
-materials you need in the [BlenderKit.com](https://blenderkit.com) online
+Add this BlenderKit add-on to your Godot project and then just select models
+you need in the [BlenderKit.com](https://blenderkit.com) online
 gallery in your browser and send them directly into your Godot project with a
 single click on the **Send to Godot** button.
 
@@ -43,12 +43,9 @@ printed to Godot Output. As of Godot 4.5.1, Blender 3 is required while Blender
 This plugin will get increasingly useful as native Blender -> Godot import
 improves.
 
-Alongside this upstream effort, we at [BlenderKit](https://blenderkit.com) are
-experimenting with our own **GLTF** export as it's Godot's intended default
-import format where highest degree of compatibility should be expected.
-
-Once **GLTF** export support matures, the BlenderKit plugin might provide an option to
-prefer `.gltf` / `.glb` over `.blend`, possibly on by default.
+Experimental **GLTF** support was introduced in `0.4.0` - there is now an option
+to prefer GLTF (`*.glb`, `*.gltf`) over original Blender (`*.blend`) file. GLTF
+auto-exports are by no means perfect, but they might occassionally work.
 
 
 ## Requirements
@@ -56,10 +53,9 @@ prefer `.gltf` / `.glb` over `.blend`, possibly on by default.
 BlenderKit Godot Plugin requires:
 
 - Godot Engine: **4.X**
-- OS: **Linux**, **MacOS**, **Windows**
+- OS: **Linux**, **Windows**, **MacOS** (each comes with different problems)
 - Architectures: **x86_64**, **arm64**
 - Web browser
-- [BlenderKit.com](https://blenderkit.com) account (free, no payment or credit card required)
 
 
 ## Installation
@@ -85,28 +81,30 @@ After BlenderKit Godot plugin is installed and enabled in your Godot project,
 you should see a new **BlenderKit** tab in the right panel dock (next to
 **Inspector**) of the Godot Editor.
 
-You need to login to [BlenderKit.com](https://blenderkit.com) in a web browser.
-Free and Paid plans are supported. You don't need a credit card to get free
-assets, but you can access paid assets should you decide to support artists.
-
 You can now browse assets from [BlenderKit.com](https://blenderkit.com) in your
 browser and download them into your Godot project with a single click on the **Send
-to Godot** button right on the asset page.
+to Godot** button on any **Get asset** page.
 
-For example after downloading two models and one material:
+For example, after downloading two models and one material:
 
 ```
 bk_assets
-├── material
-│   └── resolution_4K_dbec842e-9f6e-43c8-ace4-9f815d3bd997.blend
-└── model
-    ├── resolution_2K_af103cc0-ffb5-46f1-b877-9a72b71d8c59.blend
-    └── resolution_4K_d110f837-ae04-4fee-b287-a7110ac44be4.blend
+├── materials
+│   └── stylized-wooden-_42daf872-0c07-4f9f-bd51-2d741043096b
+│       └── stylized-wooden-floor_2K_724059e9-51b8-4d19-8088-3a11745347a2.blend
+└── models
+    ├── 19th-century-pap_6c28bfad-6678-4e85-abbc-41b36c436c96
+    │   └── 19th-century-paper-clutter-waste_2K_2e96ac1b-aae0-4c49-b352-6553f693f841.blend
+    └── wooden-lamp_84286bab-7077-4bb8-a83f-f035c71e9885
+        └── wooden-lamp_e6458d96-fe9f-4b4d-a164-c7d61974be86.blend
 ```
 
-Better naming and even converting to Godot native formats might get implemented
-in the future, but for now we're focusing on the foundation - one click
-to get an asset into your Godot project reliably.
+You don't need a credit card to get free assets, but you can access paid assets
+should you decide to support artists with a
+[BlenderKit.com](https://blenderkit.com) Full Plan.
+
+You can create empty `.gdignore` file in `bk_assets/` to prevent Godot
+auto-import.
 
 
 ## Directory Structure
