@@ -55,7 +55,7 @@ BlenderKit Godot Plugin requires:
 - Godot Engine: **4.X**
 - OS: **Linux**, **Windows**, **MacOS** (each comes with different problems)
 - Architectures: **x86_64**, **arm64**
-- Web browser
+- Web browser: **permission to access local network** (to connect to BlenderKit Client)
 
 
 ## Installation
@@ -105,6 +105,43 @@ should you decide to support artists with a
 
 You can create empty `.gdignore` file in `bk_assets/` to prevent Godot
 auto-import.
+
+
+## Architecture
+
+```text
+     local machine                                          internet
+
+┌──────────────────────┐
+│   BlenderKit Godot   │
+│      (GDScript)      │
+└──────────────────────┘
+           ▲
+           │
+     HTTP  │  connects to existing BlenderKit Client
+           │  or spawns a new one
+           │
+           ▼
+┌──────────────────────┐            HTTPS             ┌────────────────────┐
+│   BlenderKit Client  │◄────────────────────────────►│   blenderkit.com   │
+│        (Go)          │     search/download/auth     │       server       |
+└──────────────────────┘                              └────────────────────┘
+           ▲
+           │
+     HTTP  │  initiate download
+           │
+           ▼
+┌─────────────────────────┐
+│   Browser / bkclientjs  │
+│       (JavaScript)      │
+└─────────────────────────┘
+```
+
+### Weak points
+
+- **Browser ↔ Client** connection may be blocked by browser policy / firewall / OS settings
+- **Godot ↔ Client** connection may be lost if Godot doesn't send heartbeat for
+  too long, this leads to Client auto (re)start
 
 
 ## Directory Structure
