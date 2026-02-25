@@ -1,4 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://ijjjf42k124s"]
+[gd_scene load_steps=4 format=3 uid="uid://ijjjf42k124s"]
+
+[ext_resource type="Texture2D" uid="uid://5n2k0xbtnud2" path="res://addons/blenderkit/logo/blenderkit-logo-hexa_pure.svg" id="Texture2D_logo"]
+
+[sub_resource type="SystemFont" id="SystemFont_bold"]
+subpixel_positioning = 0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m2h48"]
 bg_color = Color(0, 0, 0, 0.13725491)
@@ -47,7 +52,42 @@ layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.31
 tooltip_text = "Open BlenderKit asset gallery in your browser. Choose the assets you like and download them directly and automatically into this Godot project."
-text = "Browse Assets"
+
+[node name="LogoMargin" type="MarginContainer" parent="BrowseAssets"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="LogoTexture" type="TextureRect" parent="BrowseAssets/LogoMargin"]
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("Texture2D_logo")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="BrowseLabel" type="Label" parent="BrowseAssets"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_fonts/font = SubResource("SystemFont_bold")
+theme_override_font_sizes/font_size = 18
+text = "Browse
+Assets"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Spacer2" type="Control" parent="."]
 layout_mode = 2
