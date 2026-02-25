@@ -214,7 +214,7 @@ text = "Log Level"
 [node name="OptionButton" type="OptionButton" parent="LogLevel"]
 layout_mode = 2
 size_flags_horizontal = 3
-selected = 3
+selected = 2
 item_count = 6
 popup/item_0/text = "ERROR"
 popup/item_0/id = 0
