@@ -12,6 +12,8 @@ import sys
 PLUGIN_SRC_DIR = "addons"
 PLUGIN_DIR = "blenderkit"
 CLIENT_DIR = "BlenderKit"
+CLIENT_REPO_URL = "https://github.com/BlenderKit/BlenderKit.git"
+CLIENT_REPO_REF = "main"
 RESULT_DIR = "out"
 ARCHIVE_BASE_NAME = "blenderkit-godot"
 PLUGIN_CLIENT_DIR = os.path.join(PLUGIN_SRC_DIR, PLUGIN_DIR, "client")
@@ -43,9 +45,13 @@ def get_client_src():
     if os.path.exists(CLIENT_DIR):
         print(f"Client Repo already exists at {CLIENT_DIR}, skipping.")
     else:
-        print(f"Cloning Client Repo to {CLIENT_DIR}...")
+        print(f"Cloning Client Repo to {CLIENT_DIR} (ref: {CLIENT_REPO_REF})...")
         subprocess.run(
-            ["git", "clone", "https://github.com/BlenderKit/BlenderKit.git"],
+            ["git", "clone", CLIENT_REPO_URL, CLIENT_DIR],
+            check=True,
+        )
+        subprocess.run(
+            ["git", "-C", CLIENT_DIR, "checkout", CLIENT_REPO_REF],
             check=True,
         )
     ensure_godot_ignore(CLIENT_DIR)
