@@ -1,13 +1,12 @@
 [gd_scene format=3 uid="uid://8t50aghjcsc8"]
 
-[ext_resource type="Script" uid="uid://cub835i4i2uxq" path="res://addons/blenderkit/ui/download_progress_bar.gd" id="1_6pjij"]
+[ext_resource type="Script" path="res://addons/blenderkit/ui/download_progress_bar.gd" id="1_6pjij"]
 
 [node name="DownloadProgressBar" type="ProgressBar" unique_id=649660260]
 custom_minimum_size = Vector2(0, 40)
 offset_right = 338.0
 offset_bottom = 40.0
 size_flags_vertical = 4
-value = 3.0
 show_percentage = false
 script = ExtResource("1_6pjij")
 
@@ -24,6 +23,6 @@ offset_right = 20.0
 offset_bottom = 11.5
 grow_horizontal = 2
 grow_vertical = 2
-text = "3 % file_name.blend"
+text = "0 % file_name.blend"
 
 [connection signal="value_changed" from="." to="." method="_on_value_changed"]
