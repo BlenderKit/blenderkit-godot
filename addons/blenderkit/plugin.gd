@@ -100,6 +100,7 @@ var failed_requests: int = 0
 var max_failed_requests: int = 3
 var request_start_time: int = 0
 var http_request: HTTPRequest
+var unsubscribe_http_request: HTTPRequest
 var timer: Timer
 
 # paths
@@ -138,6 +139,10 @@ func _enter_tree():
 	add_child(http_request)
 	http_request.request_completed.connect(on_request_completed)
 
+	unsubscribe_http_request = HTTPRequest.new()
+	add_child(unsubscribe_http_request)
+	unsubscribe_http_request.request_completed.connect(on_unsubscribe_completed)
+
 	timer = Timer.new()
 	timer.one_shot = false
 	timer.autostart = false
@@ -152,11 +157,14 @@ func _enter_tree():
 func _exit_tree():
 	timer.queue_free()
 	http_request.queue_free()
+	unsubscribe_http_request.queue_free()
 	cleanup_ui()
 	bk_log(LogLevel.INFO, "Plugin exited")
 
 
 func fail(reason: String):
+	if state == State.CONNECTED:
+		send_unsubscribe()
 	fail_reason = reason
 	state = State.FAILED
 	timer.stop()
@@ -167,10 +175,13 @@ func fail(reason: String):
 
 func enter_state(new_state: State):
 	# Centralized state transition code
+	var prev_state := state
 	state = new_state
 	failed_requests = 0
 	match new_state:
 		State.DISABLED:
+			if prev_state == State.CONNECTED:
+				send_unsubscribe()
 			bk_log(LogLevel.INFO, "Disabled")
 			timer.stop()
 			http_request.cancel_request()
@@ -392,6 +403,23 @@ func request_failed():
 	else:
 		bk_log(LogLevel.ERROR, "Unexpected state: %s" % state_name(state))
 		fail("unexpected state")
+
+
+func send_unsubscribe():
+	var url = "http://127.0.0.1:" + port + "/godot/unsubscribe_addon"
+	var headers = ["Content-Type: application/json"]
+	var data = JSON.stringify({"app_id": OS.get_process_id()})
+	bk_log(LogLevel.INFO, "Unsubscribing from Client")
+	var error = unsubscribe_http_request.request(url, headers, HTTPClient.METHOD_POST, data)
+	if error != OK:
+		bk_log(LogLevel.WARNING, "Failed to send unsubscribe request: %s" % error)
+
+
+func on_unsubscribe_completed(result, response_code, _headers, _body):
+	if result != OK or response_code != 200:
+		bk_log(LogLevel.WARNING, "Unsubscribe request failed: result=%s, response_code=%d" % [http_result_name(result), response_code])
+	else:
+		bk_log(LogLevel.INFO, "Unsubscribed from Client")
 
 
 func on_enabled_toggled(enabled: bool):
