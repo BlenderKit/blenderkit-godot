@@ -4,6 +4,7 @@ extends EditorPlugin
 const SERVER = "https://www.blenderkit.com"
 const CLIENT_PORTS = ["62485", "65425", "55428"]
 #const CLIENT_PORTS = ["62485", "65425", "55428", "49452", "35452", "25152", "5152", "1234"]
+const RESOLUTION_OPTIONS = ["", "ORIGINAL", "resolution_4K", "resolution_2K", "resolution_1K", "resolution_0_5K"]
 const WAIT_OK: float = 0.8
 const WAIT_EXPLORING: float = 0.2
 const WAIT_STARTING: float = 1
@@ -93,7 +94,7 @@ var fail_reason: String = ""
 var download_dir: String = "res://bk_assets/"
 var absolute_download_path: String
 var model_format: String = "gltf_godot"
-var resolution: String = "resolution_2K"
+var resolution: String = ""
 var port: String = CLIENT_PORTS[0]
 var failed_requests: int = 0
 var max_failed_requests: int = 3
@@ -421,8 +422,7 @@ func on_model_format_changed(index: int):
 
 
 func on_resolution_changed(index: int):
-	var map = ["resolution_4K", "resolution_2K", "resolution_1K", "resolution_0_5K"]
-	resolution = map[index]
+	resolution = RESOLUTION_OPTIONS[index]
 	ProjectSettings.set_setting("blenderkit/resolution", resolution)
 
 
@@ -463,9 +463,8 @@ func init_ui():
 	model_format_option_button.selected = 0 if model_format == "gltf_godot" else 1
 	model_format_option_button.item_selected.connect(on_model_format_changed)
 	resolution_option_button = docked_menu_scene.get_node("Resolution/OptionButton")
-	resolution = ProjectSettings.get_setting("blenderkit/resolution", "resolution_2K")
-	var res_index_map = {"resolution_4K": 0, "resolution_2K": 1, "resolution_1K": 2, "resolution_0_5K": 3}
-	resolution_option_button.selected = res_index_map.get(resolution, 1)
+	resolution = ProjectSettings.get_setting("blenderkit/resolution", "")
+	resolution_option_button.selected = max(0, RESOLUTION_OPTIONS.find(resolution))
 	resolution_option_button.item_selected.connect(on_resolution_changed)
 	downloads_container = docked_menu_scene.get_node("DownloadsContainer")
 	update_status()

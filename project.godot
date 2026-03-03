@@ -18,7 +18,7 @@ config/features=PackedStringArray("4.5", "GL Compatibility")
 [blenderkit]
 
 model_format="gltf_godot"
-resolution="resolution_2K"
+resolution=""
 
 [editor_plugins]
 
