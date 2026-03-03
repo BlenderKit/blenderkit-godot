@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://ijjjf42k124s"]
+[gd_scene format=3 uid="uid://ijjjf42k124s"]
 
 [ext_resource type="Texture2D" uid="uid://5n2k0xbtnud2" path="res://addons/blenderkit/logo/blenderkit-logo-hexa_pure.svg" id="Texture2D_logo"]
 
@@ -8,7 +8,7 @@ subpixel_positioning = 0
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m2h48"]
 bg_color = Color(0, 0, 0, 0.13725491)
 
-[node name="BlenderKit" type="VBoxContainer"]
+[node name="BlenderKit" type="VBoxContainer" unique_id=549544804]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -17,43 +17,43 @@ offset_bottom = -9.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="EnabledCheckBox" type="CheckBox" parent="."]
+[node name="EnabledCheckBox" type="CheckBox" parent="." unique_id=1289507264]
 layout_mode = 2
 button_pressed = true
 text = "BlenderKit Client Enabled"
 
-[node name="StatusRow" type="HBoxContainer" parent="."]
+[node name="StatusRow" type="HBoxContainer" parent="." unique_id=1368938474]
 layout_mode = 2
 tooltip_text = "Status of the plugin's connection to locally running Client. Successful connection allows direct and automated downloads from the browser."
 theme_override_constants/separation = 3
 
-[node name="LeftMargin" type="Control" parent="StatusRow"]
+[node name="LeftMargin" type="Control" parent="StatusRow" unique_id=858567849]
 custom_minimum_size = Vector2(4, 0)
 layout_mode = 2
 
-[node name="StatusIcon" type="TextureRect" parent="StatusRow"]
+[node name="StatusIcon" type="TextureRect" parent="StatusRow" unique_id=671125800]
 custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
 
-[node name="StatusLabel" type="Label" parent="StatusRow"]
+[node name="StatusLabel" type="Label" parent="StatusRow" unique_id=1862164055]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Client Status"
 
-[node name="Spacer" type="Control" parent="."]
+[node name="Spacer" type="Control" parent="." unique_id=965114007]
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.02
 
-[node name="BrowseAssets" type="Button" parent="."]
+[node name="BrowseAssets" type="Button" parent="." unique_id=148039029]
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.31
 tooltip_text = "Open BlenderKit asset gallery in your browser. Choose the assets you like and download them directly and automatically into this Godot project."
 
-[node name="LogoMargin" type="MarginContainer" parent="BrowseAssets"]
+[node name="LogoMargin" type="MarginContainer" parent="BrowseAssets" unique_id=1275440865]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -66,14 +66,14 @@ theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="LogoTexture" type="TextureRect" parent="BrowseAssets/LogoMargin"]
+[node name="LogoTexture" type="TextureRect" parent="BrowseAssets/LogoMargin" unique_id=668970970]
 layout_mode = 2
 mouse_filter = 2
 texture = ExtResource("Texture2D_logo")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="BrowseLabel" type="Label" parent="BrowseAssets"]
+[node name="BrowseLabel" type="Label" parent="BrowseAssets" unique_id=1631416398]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -89,12 +89,12 @@ Assets"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Spacer2" type="Control" parent="."]
+[node name="Spacer2" type="Control" parent="." unique_id=1961986018]
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.03
 
-[node name="RichTextLabel" type="RichTextLabel" parent="."]
+[node name="RichTextLabel" type="RichTextLabel" parent="." unique_id=206234063]
 visible = false
 layout_mode = 2
 text = "BlenderKit add-on for Godot.
@@ -106,39 +106,39 @@ text = "BlenderKit add-on for Godot.
 "
 fit_content = true
 
-[node name="SettingsPanel" type="PanelContainer" parent="."]
+[node name="SettingsPanel" type="PanelContainer" parent="." unique_id=343296042]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_m2h48")
 
-[node name="SettingsLabel" type="Label" parent="SettingsPanel"]
+[node name="SettingsLabel" type="Label" parent="SettingsPanel" unique_id=1193322635]
 layout_mode = 2
 text = "Settings"
 horizontal_alignment = 1
 
-[node name="DownloadTo" type="HBoxContainer" parent="."]
+[node name="DownloadTo" type="HBoxContainer" parent="." unique_id=928024394]
 layout_mode = 2
 tooltip_text = "Directory into which the plugin will download the assets."
 
-[node name="Label" type="Label" parent="DownloadTo"]
+[node name="Label" type="Label" parent="DownloadTo" unique_id=634079548]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Download to"
 
-[node name="LineEdit" type="LineEdit" parent="DownloadTo"]
+[node name="LineEdit" type="LineEdit" parent="DownloadTo" unique_id=177837167]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "res://bk_assets"
 
-[node name="ModelFormat" type="HBoxContainer" parent="."]
+[node name="ModelFormat" type="HBoxContainer" parent="." unique_id=933874603]
 layout_mode = 2
 tooltip_text = "Choose whether to download GLTF files (recommended for Godot) or original .blend files."
 
-[node name="Label" type="Label" parent="ModelFormat"]
+[node name="Label" type="Label" parent="ModelFormat" unique_id=2139670565]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Model Format"
 
-[node name="OptionButton" type="OptionButton" parent="ModelFormat"]
+[node name="OptionButton" type="OptionButton" parent="ModelFormat" unique_id=1712861259]
 layout_mode = 2
 size_flags_horizontal = 3
 selected = 0
@@ -148,16 +148,16 @@ popup/item_0/id = 0
 popup/item_1/text = "Blender (.blend)"
 popup/item_1/id = 1
 
-[node name="Resolution" type="HBoxContainer" parent="."]
+[node name="Resolution" type="HBoxContainer" parent="." unique_id=127117294]
 layout_mode = 2
 tooltip_text = "Resolution for .blend files. Also used as fallback when GLTF is unavailable."
 
-[node name="Label" type="Label" parent="Resolution"]
+[node name="Label" type="Label" parent="Resolution" unique_id=789476219]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Resolution"
 
-[node name="OptionButton" type="OptionButton" parent="Resolution"]
+[node name="OptionButton" type="OptionButton" parent="Resolution" unique_id=1757559840]
 layout_mode = 2
 size_flags_horizontal = 3
 selected = 0
@@ -175,16 +175,16 @@ popup/item_4/id = 4
 popup/item_5/text = "0.5K"
 popup/item_5/id = 5
 
-[node name="Port" type="HBoxContainer" parent="."]
+[node name="Port" type="HBoxContainer" parent="." unique_id=1467726418]
 layout_mode = 2
 tooltip_text = "Port on which the plugin will start Client and expect it to run."
 
-[node name="Label" type="Label" parent="Port"]
+[node name="Label" type="Label" parent="Port" unique_id=1397149504]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Port"
 
-[node name="OptionButton" type="OptionButton" parent="Port"]
+[node name="OptionButton" type="OptionButton" parent="Port" unique_id=1229316546]
 layout_mode = 2
 size_flags_horizontal = 3
 selected = 0
@@ -206,16 +206,16 @@ popup/item_6/id = 6
 popup/item_7/text = "1234"
 popup/item_7/id = 7
 
-[node name="LogLevel" type="HBoxContainer" parent="."]
+[node name="LogLevel" type="HBoxContainer" parent="." unique_id=2021580567]
 layout_mode = 2
 tooltip_text = "Log level for the plugin's output."
 
-[node name="Label" type="Label" parent="LogLevel"]
+[node name="Label" type="Label" parent="LogLevel" unique_id=1614824050]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Log Level"
 
-[node name="OptionButton" type="OptionButton" parent="LogLevel"]
+[node name="OptionButton" type="OptionButton" parent="LogLevel" unique_id=1626473117]
 layout_mode = 2
 size_flags_horizontal = 3
 selected = 2
@@ -233,44 +233,45 @@ popup/item_4/id = 4
 popup/item_5/text = "TRACE"
 popup/item_5/id = 5
 
-[node name="Spacer3" type="Control" parent="."]
+[node name="Spacer3" type="Control" parent="." unique_id=1380245089]
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.1
 
-[node name="DownloadsPanel" type="PanelContainer" parent="."]
+[node name="DownloadsPanel" type="PanelContainer" parent="." unique_id=1700019883]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_m2h48")
 
-[node name="DownloadsLabel" type="Label" parent="DownloadsPanel"]
+[node name="DownloadsLabel" type="Label" parent="DownloadsPanel" unique_id=1560341213]
 layout_mode = 2
 text = "Downloads"
 horizontal_alignment = 1
 
-[node name="DownloadsContainer" type="VBoxContainer" parent="."]
+[node name="DownloadsContainer" type="VBoxContainer" parent="." unique_id=548617772]
 layout_mode = 2
 
-[node name="DocsContainer" type="HSplitContainer" parent="."]
+[node name="DocsContainer" type="HBoxContainer" parent="." unique_id=201709424]
 layout_mode = 2
 size_flags_vertical = 10
 
-[node name="HSplitContainer" type="HSplitContainer" parent="DocsContainer"]
+[node name="Version" type="Label" parent="DocsContainer" unique_id=1235482706]
 layout_mode = 2
-
-[node name="Version" type="Label" parent="DocsContainer/HSplitContainer"]
-layout_mode = 2
+size_flags_vertical = 8
 text = "BlenderKit plugin"
+vertical_alignment = 1
 
-[node name="Links" type="HSplitContainer" parent="DocsContainer"]
+[node name="Links" type="HBoxContainer" parent="DocsContainer" unique_id=1368471897]
 layout_mode = 2
 size_flags_horizontal = 10
+size_flags_vertical = 4
+theme_override_constants/separation = 16
 
-[node name="OpenDocs" type="LinkButton" parent="DocsContainer/Links"]
+[node name="OpenDocs" type="LinkButton" parent="DocsContainer/Links" unique_id=162828366]
 layout_mode = 2
-text = "Documentation"
+text = "Docs"
 uri = "https://github.com/BlenderKit/blenderkit-godot"
 
-[node name="OpenIssues" type="LinkButton" parent="DocsContainer/Links"]
+[node name="OpenIssues" type="LinkButton" parent="DocsContainer/Links" unique_id=872397358]
 layout_mode = 2
 text = "Report a Bug"
 uri = "https://github.com/BlenderKit/blenderkit-godot/issues"

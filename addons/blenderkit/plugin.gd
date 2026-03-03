@@ -476,7 +476,7 @@ func init_ui():
 	status_icon = docked_menu_scene.get_node("StatusRow/StatusIcon")
 	status_label = docked_menu_scene.get_node("StatusRow/StatusLabel")
 	port_option_button = docked_menu_scene.get_node("Port/OptionButton")
-	version_label = docked_menu_scene.get_node("DocsContainer/HSplitContainer/Version")
+	version_label = docked_menu_scene.get_node("DocsContainer/Version")
 	version_label.text = "BlenderKit v%s" % get_addon_version()
 	browse_assets_button = docked_menu_scene.get_node("BrowseAssets")
 	browse_assets_button.pressed.connect(on_browse_assets_pressed)
