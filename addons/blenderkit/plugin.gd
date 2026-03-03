@@ -22,12 +22,12 @@ const LOG_LEVEL_NAMES = {
 	LogLevel.TRACE: "TRACE",
 }
 
-var log_level: int = LogLevel.DEBUG
+var log_level: int = LogLevel.INFO
 
 func bk_log(level: LogLevel, msg: String) -> void:
 	if level > log_level:
 		return
-	var prefix = "BlenderKit %s: " % LOG_LEVEL_NAMES[level]
+	var prefix = "BlenderKit: " if level == LogLevel.INFO else "BlenderKit %s: " % LOG_LEVEL_NAMES[level]
 	var log_msg = prefix + msg
 	match level:
 		LogLevel.ERROR:
@@ -133,7 +133,7 @@ func _enter_tree():
 	bk_log(LogLevel.INFO, "Plugin enabled")
 	init_paths()
 	bk_log(LogLevel.INFO, "Download path: %s" % absolute_download_path)
-	bk_log(LogLevel.INFO, "Client data dir: %s" % client_data_dir)
+	bk_log(LogLevel.VERBOSE, "Client data dir: %s" % client_data_dir)
 
 	http_request = HTTPRequest.new()
 	add_child(http_request)
@@ -409,7 +409,7 @@ func send_unsubscribe():
 	var url = "http://127.0.0.1:" + port + "/godot/unsubscribe_addon"
 	var headers = ["Content-Type: application/json"]
 	var data = JSON.stringify({"app_id": OS.get_process_id()})
-	bk_log(LogLevel.INFO, "Unsubscribing from Client")
+	bk_log(LogLevel.INFO, "Disconnecting from Client on port %s" % port)
 	var error = unsubscribe_http_request.request(url, headers, HTTPClient.METHOD_POST, data)
 	if error != OK:
 		bk_log(LogLevel.WARNING, "Failed to send unsubscribe request: %s" % error)
@@ -417,9 +417,9 @@ func send_unsubscribe():
 
 func on_unsubscribe_completed(result, response_code, _headers, _body):
 	if result != OK or response_code != 200:
-		bk_log(LogLevel.WARNING, "Unsubscribe request failed: result=%s, response_code=%d" % [http_result_name(result), response_code])
+		bk_log(LogLevel.WARNING, "Unsubscribe request failed on port %s: result=%s, response_code=%d" % [port, http_result_name(result), response_code])
 	else:
-		bk_log(LogLevel.INFO, "Unsubscribed from Client")
+		bk_log(LogLevel.VERBOSE, "Unsubscribed from Client on port %s" % port)
 
 
 func on_enabled_toggled(enabled: bool):
