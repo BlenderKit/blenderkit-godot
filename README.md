@@ -15,6 +15,9 @@ Assets get downloaded into a directory of your choice in your Godot project,
 You can process assets as you see fit, possibly building your own workflow /
 pipeline on top of this simple mechanism.
 
+See [User Guide](https://blenderkit.com/godot) for an overview,
+screenshots, and getting started guide.
+
 This project is Free and Open Source Software under GPLv2.
 
 [Contributions](#contributing) are highly encouraged and welcome 🤝
@@ -59,6 +62,9 @@ BlenderKit Godot Plugin requires:
 
 
 ## Installation
+
+See [User Guide](https://blenderkit.com/godot) for a visual overview
+of installation and usage.
 
 The Plugin needs to be installed for each Godot project:
 
