@@ -1,4 +1,4 @@
-# BlenderKit for Godot
+# BlenderKit in Godot
 
 Simple yet effective [Godot Engine](https://godotengine.org/) 4 editor plugin
 which enables direct import of assets from
