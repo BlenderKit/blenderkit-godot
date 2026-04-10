@@ -1,16 +1,12 @@
 # BlenderKit in Godot
 
-Simple yet effective [Godot Engine](https://godotengine.org/) 4 editor plugin
-which enables direct import of assets from
-[BlenderKit](https://blenderkit.com) into a Godot project.
+A simple yet effective add-on that lets you import models
+from the [BlenderKit](https://blenderkit.com) library
+to [Godot Engine](https://godotengine.org/).
 
-Add this BlenderKit add-on to your Godot project and then just select models
-you need in the [BlenderKit.com](https://blenderkit.com) online
-gallery in your browser and send them directly into your Godot project with a
-single click on the **Send to Godot** button.
-
-Assets get downloaded into a directory of your choice in your Godot project,
-`bk_assets/` by default.
+Browse the [BlenderKit.com](https://blenderkit.com) gallery, click **Send to Godot**
+on any asset, and let it land directly in your Godot
+project - organized and ready to use.
 
 You can process assets as you see fit, possibly building your own workflow /
 pipeline on top of this simple mechanism.
